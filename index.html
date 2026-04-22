@@ -1,25 +1,95 @@
-<!-- GANTI BAGIAN INI SAJA DI DALAM FILEMU -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Special for You ❤️</title>
+    <style>
+        body { 
+            background: #fff0f5; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            z-index: 10;
+        }
+        h1 { color: #d63384; font-size: 24px; }
+        p { color: #6c757d; }
+        .btn-container { margin-top: 30px; position: relative; height: 50px; }
+        button {
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #yes { background: #d63384; color: white; margin-right: 10px; }
+        #no { background: #6c757d; color: white; position: absolute; }
+        .heart {
+            position: absolute;
+            color: #ff69b4;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+    </style>
+</head>
+<body>
 
-<button id="yes" onclick="nembak()">MAU</button>
-<button id="no" onmouseover="pindah()">GAK</button>
+<div class="card">
+    <h1>Halo Cantik... 🌹</h1>
+    <p>Aku punya sesuatu yang mau aku sampaikan.</p>
+    <p><b>"Maukah kamu jadi pacarku?"</b></p>
+    
+    <div class="btn-container">
+        <button id="yes" onclick="terima()">MAU ❤️</button>
+        <button id="no" onmouseover="lari()">GAK ❌</button>
+    </div>
+</div>
 
 <script>
-    function nembak() {
-        // Ini adalah payload romantis yang kamu minta
-        alert('I love you! Mau kah kamu jadi pacar ku? muach cantik 🌹❤️');
-        
-        // Bonus: Setelah klik OK, arahkan ke WhatsApp kamu biar dia langsung laporan!
-        // Ganti nomor di bawah dengan nomormu (awali dengan 62)
-        window.location.href = "https://wa.me";
+    // --- KONFIGURASI TELEGRAM (GANTI DI SINI!) ---
+    const TOKEN = "8656614533:AAGHCLdmRtOfOLfSGZUHJcFu76OL0cVnF8U";
+    const CHAT_ID = "8778681440";
+
+    function terima() {
+        // Kirim Notif ke Telegram kamu
+        const pesan = "Target sudah masuk jebakan! Dia bilang MAU! 🌹❤️";
+        fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${pesan}`);
+
+        alert('I love you! muach cantik 🌹❤️');
+        window.location.href = "https://wa.me!";
     }
 
-    function pindah() {
-        var x = Math.random() * (window.innerWidth - 100);
-        var y = Math.random() * (window.innerHeight - 100);
-        var btn = document.getElementById('no');
-        btn.style.position = 'absolute';
+    function lari() {
+        const btn = document.getElementById('no');
+        const x = Math.random() * (window.innerWidth - 100);
+        const y = Math.random() * (window.innerHeight - 100);
         btn.style.left = x + 'px';
         btn.style.top = y + 'px';
     }
+
+    // Animasi Hati Berjatuhan
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+    }, 300);
 </script>
+</body>
+</html>
 
