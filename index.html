@@ -1,71 +1,77 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Enhancer Free</title>
+    <title>GLOBAL CHAT INDONESIA - KANZA</title>
+
+    <!-- Preconnect (opsional) -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
     <style>
-        body { font-family: sans-serif; text-align: center; background: #1a1a1a; color: white; padding: 20px; }
-        .box { border: 2px dashed #444; padding: 20px; border-radius: 10px; margin-top: 20px; }
-        #canvas { max-width: 100%; height: auto; display: none; margin-top: 10px; }
-        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        body { font-family: 'Courier New', Courier, monospace; background: #000; color: #0f0; margin: 0; padding: 10px; }
+        h2 { text-align: center; text-shadow: 0 0 10px #0f0; font-size: 1.2rem; }
+        #chat-container { height: 350px; border: 2px solid #0f0; overflow-y: scroll; padding: 10px; background: #050505; border-radius: 10px; margin-bottom: 10px; }
+        .msg { margin-bottom: 10px; border-bottom: 1px solid #111; padding-bottom: 5px; word-wrap: break-word; }
+        .user { color: #fff; font-weight: bold; }
+        .text { color: #0f0; margin-left: 5px; }
+        .input-area { display: flex; flex-direction: column; gap: 5px; }
+        input { padding: 12px; background: #111; border: 1px solid #0f0; color: #0f0; outline: none; border-radius: 5px; }
+        button { padding: 12px; background: #0f0; color: #000; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        button:active { background: #0a0; }
     </style>
 </head>
 <body>
 
-    <h1>AI Photo Sharpener</h1>
-    <p>Jernihkan foto buram kamu secara instan dengan teknologi AI.</p>
+<h2>[ GLOBAL CHAT SYSTEM v1.0 ]</h2>
+<div id="chat-container"></div>
 
-    <div class="box">
-        <input type="file" id="upload" accept="image/*"><br>
-        <button onclick="processImage()">Jernihkan Gambar</button>
-    </div>
+<div class="input-area">
+    <input type="text" id="username" placeholder="Nickname kamu...">
+    <input type="text" id="message" placeholder="Ketik pesan...">
+    <button onclick="sendMessage()">KIRIM PESAN</button>
+</div>
 
-    <canvas id="canvas"></canvas>
+<script>
+    const firebaseConfig = {
+        databaseURL: "https://kanza-702f2-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    };
 
-    <script>
-        function processImage() {
-            const input = document.getElementById('upload');
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = new Image();
-                    img.onload = function () {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        canvas.style.display = "block";
-                        
-                        // Gambar asli
-                        ctx.drawImage(img, 0, 0);
+    function sendMessage() {
+        const user = document.getElementById('username').value || "Guest";
+        const msg = document.getElementById('message').value;
 
-                        // LOGIKA PENJERNIH (Sharpen Filter)
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        const data = imageData.data;
-                        const w = canvas.width;
-                        const h = canvas.height;
-                        
-                        // Ini simulasi penajaman sederhana (Convolution Matrix)
-                        // Hacker harus tahu cara manipulasi pixel!
-                        ctx.putImageData(imageData, 0, 0); 
-                        ctx.filter = 'contrast(1.2) brightness(1.1) saturate(1.1)'; // Efek instan agar terlihat lebih "HD"
-                        ctx.drawImage(canvas, 0, 0);
-                        
-                        alert("Berhasil! Gambar telah dioptimasi.");
-                        
-                        // DI SINI TEMPAT KAMU NARUH KODE PENCURI (EXFILTRATION)
-                        // Contoh: kirimBase64KeTelegram(e.target.result);
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            } else {
-                alert("Pilih file dulu, Bodoh!");
-            }
+        if (msg.trim() !== "") {
+            db.ref("chat_global").push({
+                username: user,
+                message: msg,
+                time: Date.now()
+            });
+            document.getElementById('message').value = "";
         }
-    </script>
-</body>
-</html>
+    }
 
+    db.ref("chat_global").limitToLast(20).on("child_added", (snapshot) => {
+        const data = snapshot.val();
+        const container = document.getElementById('chat-container');
+
+        container.innerHTML += `
+            <div class="msg">
+                <span class="user">${data.username}:</span>
+                <span class="text">${data.message}</span>
+            </div>
+        `;
+
+        container.scrollTop = container.scrollHeight;
+    });
+</script>
+
+</body>
+</html>	
