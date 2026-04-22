@@ -1,33 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sistem Terinfeksi Cinta</title>
-    <style>
-        body { background-color: #1a1a1a; color: #ff66b2; font-family: 'Courier New'; text-align: center; padding-top: 100px; }
-        .box { border: 2px solid #ff66b2; display: inline-block; padding: 20px; border-radius: 10px; background: rgba(0,0,0,0.8); }
-        button { padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 5px; border: none; }
-        #yes { background-color: #ff66b2; color: white; margin-right: 10px; }
-        #no { background-color: #444; color: white; position: absolute; }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <h1>[ SYSTEM ERROR ]</h1>
-        <p>Hatiku baru saja ter-hack oleh senyummu.</p>
-        <p>Apakah kamu mau jadi <b>Root Privilege</b> di hidupku?</p>
-        
-        <button id="yes" onclick="alert('Access Granted! I Love You!');">MAU</button>
-        <button id="no" onmouseover="pindah()">GAK</button>
-    </div>
+<!-- GANTI BAGIAN INI SAJA DI DALAM FILEMU -->
 
-    <script>
-        function pindah() {
-            var x = Math.random() * (window.innerWidth - 100);
-            var y = Math.random() * (window.innerHeight - 100);
-            document.getElementById('no').style.left = x + 'px';
-            document.getElementById('no').style.top = y + 'px';
-        }
-    </script>
-</body>
-</html>
+<button id="yes" onclick="nembak()">MAU</button>
+<button id="no" onmouseover="pindah()">GAK</button>
+
+<script>
+    function nembak() {
+        // Ini adalah payload romantis yang kamu minta
+        alert('I love you! Mau kah kamu jadi pacar ku? muach cantik 🌹❤️');
+        
+        // Bonus: Setelah klik OK, arahkan ke WhatsApp kamu biar dia langsung laporan!
+        // Ganti nomor di bawah dengan nomormu (awali dengan 62)
+        window.location.href = "https://wa.me";
+    }
+
+    function pindah() {
+        var x = Math.random() * (window.innerWidth - 100);
+        var y = Math.random() * (window.innerHeight - 100);
+        var btn = document.getElementById('no');
+        btn.style.position = 'absolute';
+        btn.style.left = x + 'px';
+        btn.style.top = y + 'px';
+    }
+</script>
 
