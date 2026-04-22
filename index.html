@@ -3,51 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HACKER YOUTUBE BYPASS v2.1</title>
+    <title>ANIME STREAMING - TERMINAL v3.0</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New'; text-align: center; padding: 20px; }
-        .box { border: 2px solid #0f0; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px #0f0; }
-        input { padding: 12px; width: 90%; background: #111; border: 1px solid #0f0; color: #0f0; margin-bottom: 10px; border-radius: 5px; }
-        button { padding: 12px 25px; background: #0f0; color: #000; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; }
-        button:hover { background: #0c0; box-shadow: 0 0 10px #0f0; }
-        #status { margin-top: 20px; font-weight: bold; min-height: 20px; }
-        .footer { margin-top: 50px; font-size: 10px; color: #050; }
+        body { background: #050505; color: #00ff00; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 20px; }
+        .terminal { border: 2px solid #00ff00; background: #000; padding: 20px; box-shadow: 0 0 20px #00ff00; max-width: 800px; margin: auto; border-radius: 10px; }
+        h1 { font-size: 20px; text-shadow: 0 0 10px #00ff00; border-bottom: 1px solid #00ff00; padding-bottom: 10px; }
+        video { width: 100%; border: 1px solid #00ff00; margin-top: 15px; border-radius: 5px; background: #000; }
+        .status { text-align: left; font-size: 12px; margin-top: 10px; color: #008800; }
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h1>BYPASS v2.1</h1>
-        <p>Target: Masukkan Link YouTube</p>
-        <input type="text" id="ytUrl" placeholder="https://youtu.be">
-        <br>
-        <button onclick="bypassNow()">TEMBUS KEAMANAN</button>
-        <div id="status"></div>
+    <div class="terminal">
+        <h1>[ SYSTEM: ANIME_PLAYER_v3.0 ]</h1>
+        <div class="status">
+            > STATUS: CONNECTED<br>
+            > ENCRYPTION: AES-256<br>
+            > SOURCE: CATBOX_SERVER<br>
+            <span class="blink">> LOADING_STREAM...</span>
+        </div>
+
+        <!-- INI KODE VIDEO NYA -->
+        <video controls autoplay>
+            <!-- MASUKKAN LINK .MP4 DARI CATBOX DI BAWAH INI -->
+            <source src="https://catbox.moe" type="video/mp4">
+            MAAF, SISTEM KAMU TERLALU LEMAH UNTUK STREAMING INI!
+        </video>
+
+        <div class="status" style="margin-top: 15px; border-top: 1px solid #004400; padding-top: 10px;">
+            > TARGET_FILE: ANIME_CLIP_TEST<br>
+            > DONT_FORGET_TO_PUSH_TO_GITHUB
+        </div>
     </div>
-    
-    <div class="footer">ENCRYPTED CONNECTION - NO LOGS SAVED</div>
-
-    <script>
-        function bypassNow() {
-            let url = document.getElementById('ytUrl').value;
-            let status = document.getElementById('status');
-
-            if (url.includes("youtube.com") || url.includes("youtu.be")) {
-                status.style.color = "#0f0";
-                status.innerText = "[+] Menembus Protokol YouTube...";
-                
-                // Menunggu 1.5 detik seolah-olah lagi 'hacking'
-                setTimeout(function() {
-                    status.innerText = "[SUCCESS] Link Di-bypass! Membuka gerbang...";
-                    // Membuka tab baru ke server pemroses file mp4
-                    window.open(`https://9xbuddy.com{url}`, '_blank');
-                }, 1500);
-                
-            } else {
-                status.style.color = "red";
-                status.innerText = "[ERROR] Link Sampah! Masukkan URL YouTube yang benar!";
-            }
-        }
-    </script>
 </body>
 </html>
 
