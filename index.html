@@ -3,75 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOBAL CHAT INDONESIA - KANZA</title>
-
-    <!-- Preconnect (opsional) -->
-    <link href="https://fonts.gstatic.com" rel="preconnect">
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
+    <title>Underground Video Player</title>
     <style>
-        body { font-family: 'Courier New', Courier, monospace; background: #000; color: #0f0; margin: 0; padding: 10px; }
-        h2 { text-align: center; text-shadow: 0 0 10px #0f0; font-size: 1.2rem; }
-        #chat-container { height: 350px; border: 2px solid #0f0; overflow-y: scroll; padding: 10px; background: #050505; border-radius: 10px; margin-bottom: 10px; }
-        .msg { margin-bottom: 10px; border-bottom: 1px solid #111; padding-bottom: 5px; word-wrap: break-word; }
-        .user { color: #fff; font-weight: bold; }
-        .text { color: #0f0; margin-left: 5px; }
-        .input-area { display: flex; flex-direction: column; gap: 5px; }
-        input { padding: 12px; background: #111; border: 1px solid #0f0; color: #0f0; outline: none; border-radius: 5px; }
-        button { padding: 12px; background: #0f0; color: #000; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
-        button:active { background: #0a0; }
+        body { background-color: #0f0f0f; color: white; font-family: Arial; margin: 0; }
+        .header { background: #202020; padding: 15px; font-weight: bold; color: red; }
+        .video-container { width: 100%; max-width: 800px; margin: auto; }
+        video { width: 100%; border: 2px solid #333; }
+        .info { padding: 15px; }
+        h2 { font-size: 18px; margin: 10px 0; }
     </style>
 </head>
 <body>
+    <div class="header">HACK-TUBE v1.0</div>
+    
+    <div class="video-container">
+        <!-- Ganti URL src dengan link video mp4 kamu -->
+        <video controls autoplay>
+            <source src="https://w3schools.com" type="video/mp4">
+            Browser kamu terlalu kuno untuk jadi hacker!
+        </video>
+    </div>
 
-<h2>[ GLOBAL CHAT SYSTEM v1.0 ]</h2>
-<div id="chat-container"></div>
-
-<div class="input-area">
-    <input type="text" id="username" placeholder="Nickname kamu...">
-    <input type="text" id="message" placeholder="Ketik pesan...">
-    <button onclick="sendMessage()">KIRIM PESAN</button>
-</div>
-
-<script>
-    const firebaseConfig = {
-        databaseURL: "https://kanza-702f2-default-rtdb.asia-southeast1.firebasedatabase.app/"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    function sendMessage() {
-        const user = document.getElementById('username').value || "Guest";
-        const msg = document.getElementById('message').value;
-
-        if (msg.trim() !== "") {
-            db.ref("chat_global").push({
-                username: user,
-                message: msg,
-                time: Date.now()
-            });
-            document.getElementById('message').value = "";
-        }
-    }
-
-    db.ref("chat_global").limitToLast(20).on("child_added", (snapshot) => {
-        const data = snapshot.val();
-        const container = document.getElementById('chat-container');
-
-        container.innerHTML += `
-            <div class="msg">
-                <span class="user">${data.username}:</span>
-                <span class="text">${data.message}</span>
-            </div>
-        `;
-
-        container.scrollTop = container.scrollHeight;
-    });
-</script>
-
+    <div class="info">
+        <h2>Target Video: Big Buck Bunny (Test Server)</h2>
+        <p>Status: Disambungkan melalui Terminal Termux.</p>
+    </div>
 </body>
-</html>	
+</html>
+
