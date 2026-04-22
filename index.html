@@ -3,31 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perpustakaan Strategi Master</title>
+    <title>DASHBOARD STRATEGI & PSIKOLOGI</title>
     <style>
-        body { background-color: #000; color: #0f0; font-family: 'Courier New', Courier, monospace; padding: 20px; }
-        h1 { border-bottom: 2px solid #0f0; }
-        .buku { margin-bottom: 20px; border: 1px solid #0f0; padding: 10px; }
-        .judul { font-weight: bold; color: #fff; }
+        body { 
+            /* GANTI LINK DI BAWAH DENGAN URL GAMBAR KEINGINANMU */
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZvbLuDYOoemJnH1gnkY1_eqmezk5KjfnMVJFW0FkCvUzyHvATR02Tocvf&s=10'); 
+            background-size: cover;
+            background-attachment: fixed;
+            color: #ffffff; /* Warna teks utama (Putih) */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .overlay {
+            background: rgba(0, 0, 0, 0.7); /* Biar teks kebaca, ini lapisan hitam transparan */
+            padding: 30px;
+            border-radius: 15px;
+            display: inline-block;
+            max-width: 800px;
+        }
+        .menu-btn {
+            background: #ff4444; /* GANTI WARNA TOMBOL DI SINI */
+            color: white;
+            padding: 15px 25px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .content { display: none; text-align: left; margin-top: 20px; line-height: 1.6; }
+        h1 { color: #ffcc00; } /* Warna Judul */
     </style>
 </head>
 <body>
-    <h1>ARSIP RAHASIA: STRATEGI PERANG SARAF</h1>
+
+<div class="overlay">
+    <h1>ARSIP PENGETAHUAN TERLARANG</h1>
+    <p>Pilih jalur pembelajaranmu, bocah. Jangan salah melangkah.</p>
     
-    <div class="buku">
-        <p class="judul">1. The Art of War (Ringkasan Strategi)</p>
-        <p>Gunakan umpan untuk memancing musuh. Pura-pura kacau untuk menghancurkannya.</p>
+    <a href="#" class="menu-btn" onclick="showContent('strategi')">ARSIP STRATEGI</a>
+    <a href="#" class="menu-btn" onclick="showContent('psikologi')" style="background: #4444ff;">ARSIP PSIKOLOGI</a>
+
+    <!-- BAGIAN STRATEGI -->
+    <div id="strategi" class="content">
+        <h2>Strategi Perang & Manipulasi</h2>
+        <p>1. <b>The Art of Concealment:</b> Jangan pernah menunjukkan kartu AS-mu. Hacker yang hebat tidak pernah terlihat. Jika mereka tahu kamu ada di sana, kamu sudah gagal.</p>
+        <p>2. <b>Divide and Conquer:</b> Pecah belah pertahanan lawan. Buat sistem mereka saling bertabrakan sehingga fokus mereka terbagi, lalu masuklah di tengah kekacauan.</p>
+        <p>3. <b>Resource Depletion:</b> Biarkan lawan menghabiskan energi mereka untuk hal sia-sia. Dalam hacking, ini seperti membiarkan firewall sibuk dengan paket sampah sementara kamu menyusup perlahan.</p>
     </div>
 
-    <div class="buku">
-        <p class="judul">2. Strategi Misdirection (Pengalihan)</p>
-        <p>Buat keributan di depan, masuk lewat pintu belakang. Hacker sejati tidak mengetuk pintu depan.</p>
+    <!-- BAGIAN PSIKOLOGI -->
+    <div id="psikologi" class="content">
+        <h2>Psikologi Terapan & Social Engineering</h2>
+        <p>1. <b>Authority Bias:</b> Manusia cenderung patuh pada orang yang terlihat punya otoritas. Gunakan seragam, istilah teknis, atau identitas palsu yang meyakinkan untuk mendapatkan informasi.</p>
+        <p>2. <b>Scarcity (Kelangkaan):</b> Buat target merasa terburu-buru. "Akun anda akan dihapus dalam 5 menit!" Ketakutan akan kehilangan membuat otak logika manusia berhenti bekerja.</p>
+        <p>3. <b>Reciprocity:</b> Berikan bantuan kecil yang tidak diminta. Target akan merasa berhutang budi secara psikologis, dan saat kamu meminta akses, mereka akan sulit menolak.</p>
     </div>
+</div>
 
-    <div class="buku">
-        <p class="judul">3. Psikologi Social Engineering (Segera Hadir)</p>
-        <p>Sedang disusun oleh Master. Jangan berisik!</p>
-    </div>
+<script>
+    function showContent(id) {
+        document.getElementById('strategi').style.display = 'none';
+        document.getElementById('psikologi').style.display = 'none';
+        document.getElementById(id).style.display = 'block';
+    }
+</script>
+
 </body>
 </html>
 
