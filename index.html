@@ -3,45 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HACKER YOUTUBE CONVERTER</title>
+    <title>HACKER YOUTUBE BYPASS v2.1</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New'; text-align: center; }
-        input { padding: 10px; width: 80%; background: #111; border: 1px solid #0f0; color: #0f0; }
-        button { padding: 10px 20px; background: #0f0; color: #000; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        #result { margin-top: 20px; }
-        iframe { width: 100%; height: 500px; border: 2px solid #0f0; margin-top: 20px; display: none; }
+        body { background: #000; color: #0f0; font-family: 'Courier New'; text-align: center; padding: 20px; }
+        .box { border: 2px solid #0f0; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px #0f0; }
+        input { padding: 12px; width: 90%; background: #111; border: 1px solid #0f0; color: #0f0; margin-bottom: 10px; border-radius: 5px; }
+        button { padding: 12px 25px; background: #0f0; color: #000; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; }
+        button:hover { background: #0c0; box-shadow: 0 0 10px #0f0; }
+        #status { margin-top: 20px; font-weight: bold; min-height: 20px; }
+        .footer { margin-top: 50px; font-size: 10px; color: #050; }
     </style>
 </head>
 <body>
-    <h1>TERMINAL LINK BYPASS v2.0</h1>
-    <p>Masukkan Link YouTube Target:</p>
-    <input type="text" id="ytUrl" placeholder="https://youtube.com...">
-    <br>
-    <button onclick="bypassLink()">BYPASS SEKARANG!</button>
-
-    <div id="result">
-        <p id="status"></p>
-        <!-- Kita pakai bantuan API pihak ketiga untuk konversi otomatis -->
-        <iframe id="converterFrame"></iframe>
+    <div class="box">
+        <h1>BYPASS v2.1</h1>
+        <p>Target: Masukkan Link YouTube</p>
+        <input type="text" id="ytUrl" placeholder="https://youtu.be">
+        <br>
+        <button onclick="bypassNow()">TEMBUS KEAMANAN</button>
+        <div id="status"></div>
     </div>
+    
+    <div class="footer">ENCRYPTED CONNECTION - NO LOGS SAVED</div>
 
     <script>
-        function bypassLink() {
+        function bypassNow() {
             let url = document.getElementById('ytUrl').value;
             let status = document.getElementById('status');
-            let frame = document.getElementById('converterFrame');
 
             if (url.includes("youtube.com") || url.includes("youtu.be")) {
-                status.innerText = "[+] Mengekstrak Data Server...";
-                // Trik Hacker: Menggunakan pihak ketiga untuk streaming/download bypass
-                // Kita arahkan ke layanan pemroses link
-                let videoId = url.split('v=')[1] || url.split('/').pop();
-                frame.src = `https://9xbuddy.com{url}`; 
-                frame.style.display = "block";
-                status.innerText = "[SUCCESS] Link Ditemukan! Gulir ke bawah untuk download.";
+                status.style.color = "#0f0";
+                status.innerText = "[+] Menembus Protokol YouTube...";
+                
+                // Menunggu 1.5 detik seolah-olah lagi 'hacking'
+                setTimeout(function() {
+                    status.innerText = "[SUCCESS] Link Di-bypass! Membuka gerbang...";
+                    // Membuka tab baru ke server pemroses file mp4
+                    window.open(`https://9xbuddy.com{url}`, '_blank');
+                }, 1500);
+                
             } else {
-                status.innerText = "[ERROR] Link Sampah! Masukkan link YouTube asli!";
-                frame.style.display = "none";
+                status.style.color = "red";
+                status.innerText = "[ERROR] Link Sampah! Masukkan URL YouTube yang benar!";
             }
         }
     </script>
