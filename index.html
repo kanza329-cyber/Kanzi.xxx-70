@@ -1,95 +1,67 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Special for You ❤️</title>
+    <title>HADIAH SPESIAL BUAT KAMU</title>
     <style>
-        body { 
-            background: #fff0f5; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body {
+            background: #000;
+            color: #fff;
             text-align: center;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding-top: 100px;
+            font-family: Arial;
+            transition: background 0.2s;
         }
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
-            z-index: 10;
-        }
-        h1 { color: #d63384; font-size: 24px; }
-        p { color: #6c757d; }
-        .btn-container { margin-top: 30px; position: relative; height: 50px; }
         button {
-            padding: 12px 30px;
-            border-radius: 25px;
-            border: none;
-            font-weight: bold;
+            padding: 20px 40px;
+            font-size: 20px;
             cursor: pointer;
-            transition: 0.3s;
-        }
-        #yes { background: #d63384; color: white; margin-right: 10px; }
-        #no { background: #6c757d; color: white; position: absolute; }
-        .heart {
-            position: absolute;
-            color: #ff69b4;
-            animation: fall linear forwards;
-        }
-        @keyframes fall {
-            to { transform: translateY(100vh); }
+            background: #f00;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h1>Halo Cantik... 🌹</h1>
-    <p>Aku punya sesuatu yang mau aku sampaikan.</p>
-    <p><b>"Maukah kamu jadi pacarku?"</b></p>
-    
-    <div class="btn-container">
-        <button id="yes" onclick="terima()">MAU ❤️</button>
-        <button id="no" onmouseover="lari()">GAK ❌</button>
-    </div>
-</div>
+    <h1>KLIK TOMBOL DI BAWAH UNTUK LIHAT KEJUTAN! 🎁</h1>
+    <br>
 
-<script>
-    // --- KONFIGURASI TELEGRAM (GANTI DI SINI!) ---
-    const TOKEN = "8656614533:AAGHCLdmRtOfOLfSGZUHJcFu76OL0cVnF8U";
-    const CHAT_ID = "8778681440";
+    <button onclick="jalankanPrank()">BUKA HADIAH</button>
 
-    function terima() {
-        // Kirim Notif ke Telegram kamu
-        const pesan = "Target sudah masuk jebakan! Dia bilang MAU! 🌹❤️";
-        fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${pesan}`);
+    <audio id="audioPrank" preload="auto">
+        <source src="suara.mp3" type="audio/mpeg">
+    </audio>
 
-        alert('I love you! muach cantik 🌹❤️');
-        window.location.href = "https://wa.me!";
-    }
+    <script>
+        // GANTI DENGAN DATA TELEGRAMMU
+        const TOKEN = "8656614533:AAGHCLdmRtOfOLfSGZUHJcFu76OL0cVnF8U";
+        const CHAT_ID = "8778681440";
 
-    function lari() {
-        const btn = document.getElementById('no');
-        const x = Math.random() * (window.innerWidth - 100);
-        const y = Math.random() * (window.innerHeight - 100);
-        btn.style.left = x + 'px';
-        btn.style.top = y + 'px';
-    }
+        function jalankanPrank() {
+            // 1. Putar suara
+            var audio = document.getElementById("audioPrank");
+            audio.play().catch(() => {
+                alert("Klik lagi biar suara jalan 😅");
+            });
 
-    // Animasi Hati Berjatuhan
-    setInterval(() => {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerHTML = '❤️';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = Math.random() * 2 + 3 + 's';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 5000);
-    }, 300);
-</script>
+            // 2. Kirim notifikasi ke Telegram
+            const pesan = encodeURIComponent("korban prank kena nih kwkwk 😭😋");
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${pesan}`);
+
+            // 3. Efek kedap-kedip (lebih halus)
+            let merah = false;
+            setInterval(() => {
+                document.body.style.backgroundColor = merah ? 'black' : 'red';
+                merah = !merah;
+            }, 300);
+
+            // 4. Alert lucu
+            setTimeout(() => {
+                alert('WKWKWK kena prank 😭🤣🤓☝️');
+            }, 500);
+        }
+    </script>
+
 </body>
 </html>
-
