@@ -30,35 +30,40 @@
     <button onclick="jalankanPrank()">BUKA HADIAH</button>
 
     <audio id="audioPrank" preload="auto">
-        <source src="suara.mp3" type="audio/mpeg">
+        <source src="videoplayback.m4a" type="audio/mp4">
+        Browser kamu tidak mendukung audio 😅
     </audio>
 
     <script>
-        // GANTI DENGAN DATA TELEGRAMMU
         const TOKEN = "8656614533:AAGHCLdmRtOfOLfSGZUHJcFu76OL0cVnF8U";
         const CHAT_ID = "8778681440";
 
         function jalankanPrank() {
-            // 1. Putar suara
             var audio = document.getElementById("audioPrank");
+
+            // kecilin volume biar aman
+            audio.volume = 0.2;
+
+            // reset posisi biar pasti mulai dari awal
+            audio.currentTime = 0;
+
             audio.play().catch(() => {
-                alert("Klik lagi biar suara jalan 😅");
+                alert("Audio gagal diputar 😭 cek file atau klik lagi");
             });
 
-            // 2. Kirim notifikasi ke Telegram
-            const pesan = encodeURIComponent("korban prank kena nih kwkwk 😭😋");
+            // Telegram
+            const pesan = encodeURIComponent("Woi ada korban wkwkw🤣😭");
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${pesan}`);
 
-            // 3. Efek kedap-kedip (lebih halus)
+            // kedap-kedip
             let merah = false;
             setInterval(() => {
                 document.body.style.backgroundColor = merah ? 'black' : 'red';
                 merah = !merah;
             }, 300);
 
-            // 4. Alert lucu
             setTimeout(() => {
-                alert('WKWKWK kena prank 😭🤣🤓☝️');
+                alert('WKWKWK kena prank ahhh🤓☝️');
             }, 500);
         }
     </script>
