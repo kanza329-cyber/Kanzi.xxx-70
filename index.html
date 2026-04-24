@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Game Tebak Angka 🎯</title>
+    <title>GAME MINI 🔥</title>
     <style>
         body {
-            background: #111;
+            /* GANTI LINK DI SINI */
+            background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ74Su3aitFQ8wMtuaKBM8omF7yjmJz9cDgtJN-y42agQeRzjtDHEswpQD&s=10") no-repeat center center/cover;
+
             color: white;
             text-align: center;
             font-family: Arial;
-            padding-top: 100px;
+            padding-top: 80px;
+            transition: 0.5s;
         }
+
+        .box {
+            background: rgba(0,0,0,0.7);
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
         input, button {
             padding: 10px;
             font-size: 18px;
@@ -17,40 +28,116 @@
             border-radius: 8px;
             border: none;
         }
+
         button {
             cursor: pointer;
             background: #ff3b3b;
             color: white;
         }
+
+        .win {
+            animation: flash 0.3s infinite alternate;
+        }
+
+        @keyframes flash {
+            from { background-color: rgba(0,0,0,0.7); }
+            to { background-color: rgba(255,0,0,0.7); }
+        }
     </style>
 </head>
 <body>
 
-<h1>🎯 Tebak Angka 1 - 100</h1>
+<div class="box" id="game">
 
-<p id="status">Coba tebak angkanya!</p>
+<h1 id="judul">🎯 Tebak Angka (1-50)</h1>
 
-<input type="number" id="tebakan" placeholder="Masukkan angka">
+<p id="status">Tebak angka dulu!</p>
+<p id="nyawa">❤️ Nyawa: 2</p>
+
+<input type="number" id="input">
 <br>
-<button onclick="cek()">TEBAK</button>
+<button onclick="aksi()">OK</button>
+
+</div>
 
 <script>
-let angka = Math.floor(Math.random() * 100) + 1;
-let percobaan = 0;
+let fase = 1;
 
-function cek() {
-    let input = document.getElementById("tebakan").value;
+// fase 1
+let angka = Math.floor(Math.random() * 50) + 1;
+
+// fase 2
+let hewanList = ["kucing","anjing","gajah","harimau","singa"];
+let targetHewan = hewanList[Math.floor(Math.random()*hewanList.length)];
+
+let nyawa = 2;
+
+function aksi() {
+    let input = document.getElementById("input").value.toLowerCase();
     let status = document.getElementById("status");
+    let nyawaText = document.getElementById("nyawa");
 
-    percobaan++;
-
-    if (input == angka) {
-        status.innerHTML = "🎉 BENAR! Kamu butuh " + percobaan + " percobaan!";
-    } else if (input < angka) {
-        status.innerHTML = "⬆️ Terlalu kecil!";
-    } else {
-        status.innerHTML = "⬇️ Terlalu besar!";
+    if (fase === 1) {
+        if (input == angka) {
+            faseMenang();
+            setTimeout(() => {
+                fase = 2;
+                document.getElementById("judul").innerHTML = "🔫 Fase 2: Tembak Nama Hewan!";
+                status.innerHTML = "Ketik nama hewan!";
+                document.getElementById("input").value = "";
+            }, 1500);
+        } else {
+            nyawa--;
+            if (nyawa <= 0) {
+                kalah();
+            } else {
+                if (input < angka) {
+                    status.innerHTML = "⬆️ Terlalu kecil!";
+                } else {
+                    status.innerHTML = "⬇️ Terlalu besar!";
+                }
+            }
+        }
     }
+
+    else if (fase === 2) {
+        if (input === targetHewan) {
+            menangAkhir();
+        } else {
+            nyawa--;
+            if (nyawa <= 0) {
+                kalah();
+            } else {
+                status.innerHTML = "❌ Salah! Coba lagi!";
+            }
+        }
+    }
+
+    nyawaText.innerHTML = "❤️ Nyawa: " + nyawa;
+}
+
+// efek menang fase 1
+function faseMenang() {
+    let box = document.getElementById("game");
+    box.classList.add("win");
+    document.getElementById("status").innerHTML = "🔥 BENAR! Masuk fase berikutnya!";
+    setTimeout(() => box.classList.remove("win"), 1500);
+}
+
+// menang akhir
+function menangAkhir() {
+    document.body.innerHTML = `
+    <h1 style="color:lime;">🎉 MENANG BESAR!!! 🎉</h1>
+    <p>Kamu jago banget 😎🔥</p>
+    `;
+}
+
+// kalah
+function kalah() {
+    document.body.innerHTML = `
+    <h1 style="color:red;">💀 KALAH!</h1>
+    <p>Coba lagi ya 😭</p>
+    `;
 }
 </script>
 
