@@ -4,14 +4,11 @@
     <title>GAME MINI 🔥</title>
     <style>
         body {
-            /* GANTI LINK DI SINI */
             background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ74Su3aitFQ8wMtuaKBM8omF7yjmJz9cDgtJN-y42agQeRzjtDHEswpQD&s=10") no-repeat center center/cover;
-
             color: white;
             text-align: center;
             font-family: Arial;
             padding-top: 80px;
-            transition: 0.5s;
         }
 
         .box {
@@ -35,71 +32,82 @@
             color: white;
         }
 
+        #admin {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
         .win {
             animation: flash 0.3s infinite alternate;
         }
 
         @keyframes flash {
             from { background-color: rgba(0,0,0,0.7); }
-            to { background-color: rgba(255,0,0,0.7); }
+            to { background-color: rgba(0,255,0,0.7); }
         }
     </style>
 </head>
 <body>
 
+<div id="admin">admin web ini ganteng 😏</div>
+
 <div class="box" id="game">
+    <h1 id="judul">🎯 Tebak Angka</h1>
+    <p id="status">Tebak angka 1 - 50</p>
+    <p id="nyawa"></p>
 
-<h1 id="judul">🎯 Tebak Angka (1-50)</h1>
-
-<p id="status">Tebak angka dulu!</p>
-<p id="nyawa">❤️ Nyawa: 2</p>
-
-<input type="number" id="input">
-<br>
-<button onclick="aksi()">OK</button>
-
+    <input type="text" id="input">
+    <br>
+    <button onclick="aksi()">OK</button>
+    <button onclick="ulang()">ULANGI</button>
 </div>
 
 <script>
-let fase = 1;
+let fase;
+let angka;
+let targetHewan;
+let nyawa;
 
-// fase 1
-let angka = Math.floor(Math.random() * 50) + 1;
+function startGame() {
+    fase = 1;
+    angka = Math.floor(Math.random() * 50) + 1;
+    targetHewan = ["kucing","anjing","gajah","harimau","singa"][Math.floor(Math.random()*5)];
+    nyawa = 2;
 
-// fase 2
-let hewanList = ["kucing","anjing","gajah","harimau","singa"];
-let targetHewan = hewanList[Math.floor(Math.random()*hewanList.length)];
-
-let nyawa = 2;
+    document.getElementById("judul").innerHTML = "🎯 Tebak Angka";
+    document.getElementById("status").innerHTML = "Tebak angka 1 - 50";
+    document.getElementById("nyawa").innerHTML = "";
+    document.getElementById("input").value = "";
+}
 
 function aksi() {
     let input = document.getElementById("input").value.toLowerCase();
     let status = document.getElementById("status");
-    let nyawaText = document.getElementById("nyawa");
 
+    // FASE 1 (tanpa nyawa)
     if (fase === 1) {
         if (input == angka) {
-            faseMenang();
+            efekMenang();
             setTimeout(() => {
                 fase = 2;
-                document.getElementById("judul").innerHTML = "🔫 Fase 2: Tembak Nama Hewan!";
+                document.getElementById("judul").innerHTML = "🔫 Tebak Nama Hewan";
                 status.innerHTML = "Ketik nama hewan!";
+                document.getElementById("nyawa").innerHTML = "❤️ Nyawa: " + nyawa;
                 document.getElementById("input").value = "";
-            }, 1500);
+            }, 1000);
         } else {
-            nyawa--;
-            if (nyawa <= 0) {
-                kalah();
+            if (input < angka) {
+                status.innerHTML = "⬆️ Terlalu kecil!";
             } else {
-                if (input < angka) {
-                    status.innerHTML = "⬆️ Terlalu kecil!";
-                } else {
-                    status.innerHTML = "⬇️ Terlalu besar!";
-                }
+                status.innerHTML = "⬇️ Terlalu besar!";
             }
         }
     }
 
+    // FASE 2 (pakai nyawa)
     else if (fase === 2) {
         if (input === targetHewan) {
             menangAkhir();
@@ -109,36 +117,48 @@ function aksi() {
                 kalah();
             } else {
                 status.innerHTML = "❌ Salah! Coba lagi!";
+                document.getElementById("nyawa").innerHTML = "❤️ Nyawa: " + nyawa;
             }
         }
     }
-
-    nyawaText.innerHTML = "❤️ Nyawa: " + nyawa;
 }
 
-// efek menang fase 1
-function faseMenang() {
+function efekMenang() {
     let box = document.getElementById("game");
     box.classList.add("win");
-    document.getElementById("status").innerHTML = "🔥 BENAR! Masuk fase berikutnya!";
-    setTimeout(() => box.classList.remove("win"), 1500);
+    document.getElementById("status").innerHTML = "🔥 BENAR! Lanjut fase berikutnya!";
+    setTimeout(() => box.classList.remove("win"), 1000);
 }
 
-// menang akhir
 function menangAkhir() {
-    document.body.innerHTML = `
-    <h1 style="color:lime;">🎉 MENANG BESAR!!! 🎉</h1>
-    <p>Kamu jago banget 😎🔥</p>
+    document.getElementById("game").innerHTML = `
+        <h1 style="color:lime;">🎉 MENANG!!! 🎉</h1>
+        <button onclick="ulang()">Main Lagi</button>
     `;
 }
 
-// kalah
 function kalah() {
-    document.body.innerHTML = `
-    <h1 style="color:red;">💀 KALAH!</h1>
-    <p>Coba lagi ya 😭</p>
+    document.getElementById("game").innerHTML = `
+        <h1 style="color:red;">💀 KALAH!</h1>
+        <button onclick="ulang()">Coba Lagi</button>
     `;
 }
+
+function ulang() {
+    document.getElementById("game").innerHTML = `
+        <h1 id="judul">🎯 Tebak Angka</h1>
+        <p id="status">Tebak angka 1 - 50</p>
+        <p id="nyawa"></p>
+        <input type="text" id="input">
+        <br>
+        <button onclick="aksi()">OK</button>
+        <button onclick="ulang()">ULANGI</button>
+    `;
+    startGame();
+}
+
+// start pertama kali
+startGame();
 </script>
 
 </body>
