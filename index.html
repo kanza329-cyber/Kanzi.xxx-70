@@ -71,11 +71,18 @@ let angka;
 let targetHewan;
 let nyawa;
 
+// statistik
+let benar = 0;
+let salah = 0;
+
 function startGame() {
     fase = 1;
     angka = Math.floor(Math.random() * 50) + 1;
     targetHewan = ["kucing","anjing","gajah","harimau","singa"][Math.floor(Math.random()*5)];
     nyawa = 2;
+
+    benar = 0;
+    salah = 0;
 
     document.getElementById("judul").innerHTML = "🎯 Tebak Angka";
     document.getElementById("status").innerHTML = "Tebak angka 1 - 50";
@@ -87,18 +94,20 @@ function aksi() {
     let input = document.getElementById("input").value.toLowerCase();
     let status = document.getElementById("status");
 
-    // FASE 1 (tanpa nyawa)
+    // FASE 1
     if (fase === 1) {
         if (input == angka) {
+            benar++;
             efekMenang();
             setTimeout(() => {
                 fase = 2;
                 document.getElementById("judul").innerHTML = "🔫 Tebak Nama Hewan";
-                status.innerHTML = "Ketik nama hewan!";
+                status.innerHTML = "Clue: huruf depan = '" + targetHewan.charAt(0) + "'";
                 document.getElementById("nyawa").innerHTML = "❤️ Nyawa: " + nyawa;
                 document.getElementById("input").value = "";
             }, 1000);
         } else {
+            salah++;
             if (input < angka) {
                 status.innerHTML = "⬆️ Terlalu kecil!";
             } else {
@@ -107,16 +116,18 @@ function aksi() {
         }
     }
 
-    // FASE 2 (pakai nyawa)
+    // FASE 2
     else if (fase === 2) {
         if (input === targetHewan) {
+            benar++;
             menangAkhir();
         } else {
+            salah++;
             nyawa--;
             if (nyawa <= 0) {
                 kalah();
             } else {
-                status.innerHTML = "❌ Salah! Coba lagi!";
+                status.innerHTML = "❌ Salah! Clue: huruf depan = '" + targetHewan.charAt(0) + "'";
                 document.getElementById("nyawa").innerHTML = "❤️ Nyawa: " + nyawa;
             }
         }
@@ -133,6 +144,8 @@ function efekMenang() {
 function menangAkhir() {
     document.getElementById("game").innerHTML = `
         <h1 style="color:lime;">🎉 MENANG!!! 🎉</h1>
+        <p>✔ Benar: ${benar}</p>
+        <p>❌ Salah: ${salah}</p>
         <button onclick="ulang()">Main Lagi</button>
     `;
 }
@@ -140,6 +153,8 @@ function menangAkhir() {
 function kalah() {
     document.getElementById("game").innerHTML = `
         <h1 style="color:red;">💀 KALAH!</h1>
+        <p>✔ Benar: ${benar}</p>
+        <p>❌ Salah: ${salah}</p>
         <button onclick="ulang()">Coba Lagi</button>
     `;
 }
@@ -157,7 +172,6 @@ function ulang() {
     startGame();
 }
 
-// start pertama kali
 startGame();
 </script>
 
