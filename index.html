@@ -1,178 +1,133 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GAME MINI 🔥</title>
-    <style>
-        body {
-            background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ74Su3aitFQ8wMtuaKBM8omF7yjmJz9cDgtJN-y42agQeRzjtDHEswpQD&s=10") no-repeat center center/cover;
-            color: white;
-            text-align: center;
-            font-family: Arial;
-            padding-top: 80px;
-        }
-
-        .box {
-            background: rgba(0,0,0,0.7);
-            padding: 20px;
-            border-radius: 15px;
-            display: inline-block;
-        }
-
-        input, button {
-            padding: 10px;
-            font-size: 18px;
-            margin: 5px;
-            border-radius: 8px;
-            border: none;
-        }
-
-        button {
-            cursor: pointer;
-            background: #ff3b3b;
-            color: white;
-        }
-
-        #admin {
-            position: fixed;
-            left: 10px;
-            top: 10px;
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        .win {
-            animation: flash 0.3s infinite alternate;
-        }
-
-        @keyframes flash {
-            from { background-color: rgba(0,0,0,0.7); }
-            to { background-color: rgba(0,255,0,0.7); }
-        }
-    </style>
+  <title>Pixel Battle Upgrade ⚔️</title>
+  <style>
+    body {
+      background:#1b1b1b;
+      color:white;
+      text-align:center;
+      font-family:Arial;
+    }
+    canvas {
+      background:#2d2d2d;
+      border:3px solid white;
+      margin-top:10px;
+    }
+  </style>
 </head>
 <body>
 
-<div id="admin">admin web ini ganteng 😏</div>
+<h2>⚔️ Pixel Battle (Move + Attack)</h2>
+<p>Gerak: WASD / Panah | Serang: Spasi</p>
+<p id="status"></p>
 
-<div class="box" id="game">
-    <h1 id="judul">🎯 Tebak Angka</h1>
-    <p id="status">Tebak angka 1 - 50</p>
-    <p id="nyawa"></p>
-
-    <input type="text" id="input">
-    <br>
-    <button onclick="aksi()">OK</button>
-    <button onclick="ulang()">ULANGI</button>
-</div>
+<canvas id="game" width="400" height="250"></canvas>
 
 <script>
-let fase;
-let angka;
-let targetHewan;
-let nyawa;
+const c = document.getElementById("game");
+const ctx = c.getContext("2d");
 
-// statistik
-let benar = 0;
-let salah = 0;
+// PLAYER
+let player = {
+  x:50, y:100, size:20, hp:100, speed:3
+};
 
-function startGame() {
-    fase = 1;
-    angka = Math.floor(Math.random() * 50) + 1;
-    targetHewan = ["kucing","anjing","gajah","harimau","singa"][Math.floor(Math.random()*5)];
-    nyawa = 2;
+// MONSTER
+let monster = {
+  x:300, y:100, size:20, hp:100, speed:1.2
+};
 
-    benar = 0;
-    salah = 0;
+// INPUT
+let keys = {};
 
-    document.getElementById("judul").innerHTML = "🎯 Tebak Angka";
-    document.getElementById("status").innerHTML = "Tebak angka 1 - 50";
-    document.getElementById("nyawa").innerHTML = "";
-    document.getElementById("input").value = "";
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+// LOOP
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
 }
 
-function aksi() {
-    let input = document.getElementById("input").value.toLowerCase();
-    let status = document.getElementById("status");
+// UPDATE
+function update() {
 
-    // FASE 1
-    if (fase === 1) {
-        if (input == angka) {
-            benar++;
-            efekMenang();
-            setTimeout(() => {
-                fase = 2;
-                document.getElementById("judul").innerHTML = "🔫 Tebak Nama Hewan";
-                status.innerHTML = "Clue: huruf depan = '" + targetHewan.charAt(0) + "'";
-                document.getElementById("nyawa").innerHTML = "❤️ Nyawa: " + nyawa;
-                document.getElementById("input").value = "";
-            }, 1000);
-        } else {
-            salah++;
-            if (input < angka) {
-                status.innerHTML = "⬆️ Terlalu kecil!";
-            } else {
-                status.innerHTML = "⬇️ Terlalu besar!";
-            }
-        }
-    }
+  // GERAK PLAYER
+  if (keys["w"] || keys["ArrowUp"]) player.y -= player.speed;
+  if (keys["s"] || keys["ArrowDown"]) player.y += player.speed;
+  if (keys["a"] || keys["ArrowLeft"]) player.x -= player.speed;
+  if (keys["d"] || keys["ArrowRight"]) player.x += player.speed;
 
-    // FASE 2
-    else if (fase === 2) {
-        if (input === targetHewan) {
-            benar++;
-            menangAkhir();
-        } else {
-            salah++;
-            nyawa--;
-            if (nyawa <= 0) {
-                kalah();
-            } else {
-                status.innerHTML = "❌ Salah! Clue: huruf depan = '" + targetHewan.charAt(0) + "'";
-                document.getElementById("nyawa").innerHTML = "❤️ Nyawa: " + nyawa;
-            }
-        }
-    }
+  // BATAS MAP
+  player.x = Math.max(0, Math.min(c.width - player.size, player.x));
+  player.y = Math.max(0, Math.min(c.height - player.size, player.y));
+
+  // MONSTER NGEPJAR
+  if (monster.x > player.x) monster.x -= monster.speed;
+  if (monster.x < player.x) monster.x += monster.speed;
+  if (monster.y > player.y) monster.y -= monster.speed;
+  if (monster.y < player.y) monster.y += monster.speed;
+
+  // TABRAKAN (monster nyerang)
+  if (collision(player, monster)) {
+    player.hp -= 0.2;
+  }
+
+  // STATUS
+  if (player.hp <= 0) {
+    document.getElementById("status").innerText = "💀 Kamu kalah!";
+  }
+  if (monster.hp <= 0) {
+    document.getElementById("status").innerText = "🎉 Kamu menang!";
+  }
 }
 
-function efekMenang() {
-    let box = document.getElementById("game");
-    box.classList.add("win");
-    document.getElementById("status").innerHTML = "🔥 BENAR! Lanjut fase berikutnya!";
-    setTimeout(() => box.classList.remove("win"), 1000);
+// DRAW
+function draw() {
+  ctx.clearRect(0,0,c.width,c.height);
+
+  // PLAYER
+  ctx.fillStyle="cyan";
+  ctx.fillRect(player.x, player.y, player.size, player.size);
+
+  // MONSTER
+  ctx.fillStyle="red";
+  ctx.fillRect(monster.x, monster.y, monster.size, monster.size);
+
+  // HP BAR
+  ctx.fillStyle="white";
+  ctx.fillText("HP: " + Math.floor(player.hp), 10, 15);
+  ctx.fillText("Monster: " + Math.floor(monster.hp), 260, 15);
 }
 
-function menangAkhir() {
-    document.getElementById("game").innerHTML = `
-        <h1 style="color:lime;">🎉 MENANG!!! 🎉</h1>
-        <p>✔ Benar: ${benar}</p>
-        <p>❌ Salah: ${salah}</p>
-        <button onclick="ulang()">Main Lagi</button>
-    `;
+// SERANG
+document.addEventListener("keydown", function(e) {
+  if (e.code === "Space") {
+    attack();
+  }
+});
+
+function attack() {
+  // jarak serang
+  let dist = Math.hypot(player.x - monster.x, player.y - monster.y);
+
+  if (dist < 40) {
+    monster.hp -= 10;
+  }
 }
 
-function kalah() {
-    document.getElementById("game").innerHTML = `
-        <h1 style="color:red;">💀 KALAH!</h1>
-        <p>✔ Benar: ${benar}</p>
-        <p>❌ Salah: ${salah}</p>
-        <button onclick="ulang()">Coba Lagi</button>
-    `;
+// COLLISION
+function collision(a, b) {
+  return a.x < b.x + b.size &&
+         a.x + a.size > b.x &&
+         a.y < b.y + b.size &&
+         a.y + a.size > b.y;
 }
 
-function ulang() {
-    document.getElementById("game").innerHTML = `
-        <h1 id="judul">🎯 Tebak Angka</h1>
-        <p id="status">Tebak angka 1 - 50</p>
-        <p id="nyawa"></p>
-        <input type="text" id="input">
-        <br>
-        <button onclick="aksi()">OK</button>
-        <button onclick="ulang()">ULANGI</button>
-    `;
-    startGame();
-}
-
-startGame();
+// START
+gameLoop();
 </script>
 
 </body>
