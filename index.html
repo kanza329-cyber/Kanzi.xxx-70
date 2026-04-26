@@ -7,74 +7,87 @@
 body {
     margin:0;
     font-family: Arial;
-    background: linear-gradient(135deg, #000000, #1a1a1a, #2b2b2b);
+    background: linear-gradient(to bottom, #000000, #1a1a1a);
     color: gold;
+}
+
+/* HEADER */
+h1 {
+    position: sticky;
+    top: 0;
+    background: #000;
+    padding: 15px;
+    margin: 0;
+    font-size: 18px;
+    text-shadow: 0 0 10px gold;
+    z-index: 10;
 }
 
 /* LOGIN */
 .login {
     text-align:center;
-    margin-top:100px;
+    margin-top:120px;
 }
 
 input {
-    padding:10px;
+    padding:12px;
+    width: 70%;
     margin:5px;
-    border-radius:10px;
+    border-radius:12px;
     border:none;
 }
 
 button {
-    padding:10px 20px;
+    padding:12px 25px;
     border:none;
-    border-radius:10px;
+    border-radius:12px;
     cursor:pointer;
     background: gold;
     color:black;
 }
 
-/* GALERI */
-.gallery {
-    display:none;
-}
-
-h1 {
-    text-shadow: 0 0 10px gold;
-}
-
 /* FILTER */
 .filter {
     margin:10px;
+    padding:10px;
+    border-radius:10px;
 }
 
-/* GRID */
+/* GRID MOBILE */
 .grid {
     display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap:10px;
-    padding:20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap:12px;
+    padding:10px;
 }
 
+/* CARD */
 .card {
     background:#111;
-    padding:5px;
-    border-radius:10px;
+    border-radius:15px;
+    overflow:hidden;
     position:relative;
+    box-shadow: 0 0 10px rgba(255,215,0,0.2);
 }
-
+/* IMAGE */
 .card img {
     width:100%;
-    border-radius:10px;
-    cursor:pointer;
+    height:150px;
+    object-fit:cover;
+    transition: 0.3s;
+}
+
+/* EFEK PENCET */
+.card img:active {
+    transform: scale(0.95);
 }
 
 /* LIKE */
 .like {
     position:absolute;
-    bottom:5px;
+    bottom:8px;
     right:10px;
-    cursor:pointer;
-    font-size:18px;
+    font-size:20px;
 }
 
 /* MODAL */
@@ -84,17 +97,18 @@ h1 {
     top:0; left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,0.9);
+    background:rgba(0,0,0,0.95);
     justify-content:center;
     align-items:center;
 }
 
 .modal img {
-    max-width:90%;
-    max-height:90%;
+    max-width:95%;
+    max-height:95%;
+    border-radius:10px;
 }
 </style>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
@@ -232,4 +246,4 @@ function filter(k){
 </script>
 
 </body>
-</html>
+</html>	
