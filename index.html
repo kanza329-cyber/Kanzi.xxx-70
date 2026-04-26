@@ -1,133 +1,234 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pixel Battle Upgrade ⚔️</title>
-  <style>
-    body {
-      background:#1b1b1b;
-      color:white;
-      text-align:center;
-      font-family:Arial;
-    }
-    canvas {
-      background:#2d2d2d;
-      border:3px solid white;
-      margin-top:10px;
-    }
-  </style>
+<title>Galeri Anime Premium</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background: linear-gradient(135deg, #000000, #1a1a1a, #2b2b2b);
+    color: gold;
+}
+
+/* LOGIN */
+.login {
+    text-align:center;
+    margin-top:100px;
+}
+
+input {
+    padding:10px;
+    margin:5px;
+    border-radius:10px;
+    border:none;
+}
+
+button {
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background: gold;
+    color:black;
+}
+
+/* GALERI */
+.gallery {
+    display:none;
+}
+
+h1 {
+    text-shadow: 0 0 10px gold;
+}
+
+/* FILTER */
+.filter {
+    margin:10px;
+}
+
+/* GRID */
+.grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap:10px;
+    padding:20px;
+}
+
+.card {
+    background:#111;
+    padding:5px;
+    border-radius:10px;
+    position:relative;
+}
+
+.card img {
+    width:100%;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+/* LIKE */
+.like {
+    position:absolute;
+    bottom:5px;
+    right:10px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+/* MODAL */
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal img {
+    max-width:90%;
+    max-height:90%;
+}
+</style>
+
 </head>
 <body>
 
-<h2>⚔️ Pixel Battle (Move + Attack)</h2>
-<p>Gerak: WASD / Panah | Serang: Spasi</p>
-<p id="status"></p>
+<!-- LOGIN -->
+<div class="login" id="login">
+<h2>🔐 Login dulu</h2>
+<input type="email" id="email" placeholder="Email"><br>
+<input type="password" id="pass" placeholder="Password"><br>
+<button onclick="login()">Masuk</button>
+</div>
 
-<canvas id="game" width="400" height="250"></canvas>
+<!-- GALERI -->
+<div class="gallery" id="gallery">
+
+<h1>✨ Gambar Anime ✨</h1>
+
+<!-- FILTER -->
+<select class="filter" onchange="filter(this.value)">
+<option value="all">Semua</option>
+<option value="waifu">Waifu</option>
+<option value="action">Action</option>
+</select>
+
+<div class="grid" id="grid">
+
+<!-- 1 -->
+<div class="card" data-kategori="waifu">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTePLO29qUd-fKzgA_rtg7Nd400hp2fFN4KS9BxwVqfeA&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 2 -->
+<div class="card" data-kategori="action">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSutVb_z-bJf83Jr4i64rVwblrTr5LvDUSkH6SGepN5sg&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 3 -->
+<div class="card" data-kategori="waifu">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkSygbd3Nbd3tZCWVDel6HDUmLeWWSLDIvcK2mcAyHJA&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 4 -->
+<div class="card" data-kategori="action">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS96Q35I321wPChWRvLyBNwBkQOsrDGz4QQV-nEw4WQy7r2-Tdq9ptRgww&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 5 -->
+<div class="card" data-kategori="waifu">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgyE-Zpv7rwE6K1jKY7w6UJrKnuGXZX3kWyBnB737uLw&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 6 -->
+<div class="card" data-kategori="action">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi7uDuuEZuOLeksLPc5wuWSFzxxi0R39Ay_k5zjNNhlw&s" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 7 -->
+<div class="card" data-kategori="waifu">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAclSQFLVb2IHD6BWk4ig11Fg0GpV29yIeb4F9Ot1IKQ&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 8 -->
+<div class="card" data-kategori="action">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStfajRDFEcLtHr1jrH2RsCW0bj2oxmmUa4Qo4h8RIsbw&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 9 -->
+<div class="card" data-kategori="waifu">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGgGMLwu2NuXw-I9ElHSEAAHJPbfIJVxsKCeDGOYI4UA&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+<!-- 10 -->
+<div class="card" data-kategori="action">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkhusa_FNnIiuj8Ys3ncDzUxn7QIvPV12NtN6hYKzsTw&s=10" onclick="zoom(this.src)">
+<div class="like" onclick="like(this)">❤️</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MODAL ZOOM -->
+<div class="modal" id="modal" onclick="this.style.display='none'">
+<img id="zoomImg">
+</div>
 
 <script>
-const c = document.getElementById("game");
-const ctx = c.getContext("2d");
 
-// PLAYER
-let player = {
-  x:50, y:100, size:20, hp:100, speed:3
-};
+// LOGIN
+function login(){
+    let e = document.getElementById("email").value;
+    let p = document.getElementById("pass").value;
 
-// MONSTER
-let monster = {
-  x:300, y:100, size:20, hp:100, speed:1.2
-};
-
-// INPUT
-let keys = {};
-
-document.addEventListener("keydown", e => keys[e.key] = true);
-document.addEventListener("keyup", e => keys[e.key] = false);
-
-// LOOP
-function gameLoop() {
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
+    if(e && p){
+        document.getElementById("login").style.display="none";
+        document.getElementById("gallery").style.display="block";
+    } else {
+        alert("Isi dulu 😅");
+    }
 }
 
-// UPDATE
-function update() {
-
-  // GERAK PLAYER
-  if (keys["w"] || keys["ArrowUp"]) player.y -= player.speed;
-  if (keys["s"] || keys["ArrowDown"]) player.y += player.speed;
-  if (keys["a"] || keys["ArrowLeft"]) player.x -= player.speed;
-  if (keys["d"] || keys["ArrowRight"]) player.x += player.speed;
-
-  // BATAS MAP
-  player.x = Math.max(0, Math.min(c.width - player.size, player.x));
-  player.y = Math.max(0, Math.min(c.height - player.size, player.y));
-
-  // MONSTER NGEPJAR
-  if (monster.x > player.x) monster.x -= monster.speed;
-  if (monster.x < player.x) monster.x += monster.speed;
-  if (monster.y > player.y) monster.y -= monster.speed;
-  if (monster.y < player.y) monster.y += monster.speed;
-
-  // TABRAKAN (monster nyerang)
-  if (collision(player, monster)) {
-    player.hp -= 0.2;
-  }
-
-  // STATUS
-  if (player.hp <= 0) {
-    document.getElementById("status").innerText = "💀 Kamu kalah!";
-  }
-  if (monster.hp <= 0) {
-    document.getElementById("status").innerText = "🎉 Kamu menang!";
-  }
+// LIKE
+function like(el){
+    el.textContent = el.textContent === "❤️" ? "💛" : "❤️";
 }
 
-// DRAW
-function draw() {
-  ctx.clearRect(0,0,c.width,c.height);
-
-  // PLAYER
-  ctx.fillStyle="cyan";
-  ctx.fillRect(player.x, player.y, player.size, player.size);
-
-  // MONSTER
-  ctx.fillStyle="red";
-  ctx.fillRect(monster.x, monster.y, monster.size, monster.size);
-
-  // HP BAR
-  ctx.fillStyle="white";
-  ctx.fillText("HP: " + Math.floor(player.hp), 10, 15);
-  ctx.fillText("Monster: " + Math.floor(monster.hp), 260, 15);
+// ZOOM
+function zoom(src){
+    document.getElementById("modal").style.display="flex";
+    document.getElementById("zoomImg").src = src;
 }
 
-// SERANG
-document.addEventListener("keydown", function(e) {
-  if (e.code === "Space") {
-    attack();
-  }
-});
-
-function attack() {
-  // jarak serang
-  let dist = Math.hypot(player.x - monster.x, player.y - monster.y);
-
-  if (dist < 40) {
-    monster.hp -= 10;
-  }
+// FILTER
+function filter(k){
+    let cards = document.querySelectorAll(".card");
+    cards.forEach(c=>{
+        if(k==="all" || c.dataset.kategori===k){
+            c.style.display="block";
+        } else {
+            c.style.display="none";
+        }
+    });
 }
 
-// COLLISION
-function collision(a, b) {
-  return a.x < b.x + b.size &&
-         a.x + a.size > b.x &&
-         a.y < b.y + b.size &&
-         a.y + a.size > b.y;
-}
-
-// START
-gameLoop();
 </script>
 
 </body>
