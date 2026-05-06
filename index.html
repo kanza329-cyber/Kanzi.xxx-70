@@ -12,6 +12,7 @@ body{
     font-family:Arial;
 }
 
+/* HEADER */
 .header{
     position:fixed;
     top:0;
@@ -24,6 +25,7 @@ body{
     z-index:10;
 }
 
+/* BUTTON */
 .btn{
     background:green;
     border:none;
@@ -36,11 +38,13 @@ body{
 
 #file{ display:none; }
 
+/* FEED */
 .feed{
     margin-top:60px;
     padding:10px;
 }
 
+/* POST */
 .post{
     background:#222;
     margin-bottom:15px;
@@ -50,6 +54,7 @@ body{
 
 .post img{ width:100%; }
 
+/* USER */
 .user{
     display:flex;
     align-items:center;
@@ -63,24 +68,53 @@ body{
     margin-right:8px;
 }
 
+/* CAPTION */
 .caption{
     padding:10px;
 }
 
-#caption{
+/* INPUT AREA */
+.input-box{
     position:fixed;
     bottom:10px;
     left:10px;
-    width:60%;
+    right:10px;
+}
+
+/* PREVIEW */
+.preview-box{
+    position:absolute;
+    bottom:55px;
+    left:0;
+    background:#222;
+    padding:5px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+}
+
+.preview-box img{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+.preview-box span{
+    margin-left:5px;
+    cursor:pointer;
+}
+
+/* INPUT */
+#caption{
+    width:70%;
     padding:10px;
     border-radius:10px;
     border:none;
 }
 
+/* BUTTON KIRIM */
 .kirim{
-    position:fixed;
-    bottom:10px;
-    right:10px;
     background:green;
     border:none;
     padding:10px;
@@ -93,7 +127,7 @@ body{
 <body>
 
 <div class="header">
-    <div>🔥 Meme</div>
+    <div>🔥 Gambar Anime & Meme</div>
 
     <div>
         <button id="loginBtn" class="btn" onclick="login()">Login</button>
@@ -107,17 +141,25 @@ body{
 
 <div class="feed" id="feed"></div>
 
-<input type="text" id="caption" placeholder="Caption...">
-<button class="kirim" onclick="upload()">Kirim</button>
+<!-- INPUT BOX -->
+<div class="input-box">
+
+    <div id="previewBox" class="preview-box" style="display:none;">
+        <img id="previewImg">
+        <span onclick="hapusPreview()">❌</span>
+    </div>
+
+    <input type="text" id="caption" placeholder="Caption...">
+    <button class="kirim" onclick="upload()">Kirim</button>
+
+</div>
 
 <script type="module">
 
-// 🔥 IMPORT FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, addDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 🔥 CONFIG (ISI PUNYA KAMU)
 const firebaseConfig = {
   apiKey: "AIzaSyDDtFscaogQXfjb4qO2iovus99i4Zqsl_4",
   authDomain: "kanza-702f2.firebaseapp.com",
@@ -134,7 +176,7 @@ window.login = async function(){
     await signInWithPopup(auth, provider);
 }
 
-// AUTO UBAH TOMBOL LOGIN
+// UBAH TOMBOL LOGIN
 onAuthStateChanged(auth, (user) => {
     let btn = document.getElementById("loginBtn");
 
@@ -146,6 +188,22 @@ onAuthStateChanged(auth, (user) => {
         btn.disabled = false;
     }
 });
+
+// PREVIEW GAMBAR
+document.getElementById("file").onchange = function(e){
+    let file = e.target.files[0];
+
+    if(file){
+        document.getElementById("previewImg").src = URL.createObjectURL(file);
+        document.getElementById("previewBox").style.display = "flex";
+    }
+}
+
+// HAPUS PREVIEW
+window.hapusPreview = function(){
+    document.getElementById("file").value = "";
+    document.getElementById("previewBox").style.display = "none";
+}
 
 // UPLOAD
 window.upload = function(){
@@ -181,6 +239,7 @@ window.upload = function(){
 
         fileInput.value = "";
         document.getElementById("caption").value = "";
+        document.getElementById("previewBox").style.display = "none";
 
         tampilkan();
     };
