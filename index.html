@@ -1,304 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Galeri Anime Premium</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kulkas Pintar</title>
 
 <style>
 body {
-    margin:0;
     font-family: Arial;
-    background: linear-gradient(to bottom, #000000, #1a1a1a);
-    color: gold;
-}
-
-/* HEADER */
-h1 {
-    position: sticky;
-    top: 0;
-    background: #000;
-    padding: 15px;
-    margin: 0;
-    font-size: 18px;
-    text-shadow: 0 0 10px gold;
-    z-index: 10;
-}
-
-/* LOGIN */
-.login {
+    background:#111;
+    color:white;
     text-align:center;
-    margin-top:120px;
+    padding:20px;
 }
 
 input {
-    padding:12px;
-    width: 70%;
-    margin:5px;
-    border-radius:12px;
+    padding:10px;
+    width:70%;
+    border-radius:10px;
     border:none;
 }
 
 button {
-    padding:12px 25px;
+    padding:10px 20px;
+    margin-top:10px;
     border:none;
-    border-radius:12px;
-    cursor:pointer;
-    background: gold;
-    color:black;
+    border-radius:10px;
+    background:green;
+    color:white;
 }
 
-/* FILTER */
-.filter {
+.card {
+    background:#222;
     margin:10px;
     padding:10px;
     border-radius:10px;
 }
-
-/* GRID MOBILE */
-.grid {
-    display:grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap:12px;
-    padding:10px;
-}
-
-/* CARD */
-.card {
-    background:#111;
-    border-radius:15px;
-    overflow:hidden;
-    position:relative;
-    box-shadow: 0 0 10px rgba(255,215,0,0.2);
-}
-/* IMAGE */
-.card img {
-    width:100%;
-    height:150px;
-    object-fit:cover;
-    transition: 0.3s;
-}
-
-/* EFEK PENCET */
-.card img:active {
-    transform: scale(0.95);
-}
-
-/* LIKE */
-.like {
-    position:absolute;
-    bottom:8px;
-    right:10px;
-    font-size:20px;
-}
-
-/* MODAL */
-.modal {
-    display:none;
-    position:fixed;
-    top:0; left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.95);
-    justify-content:center;
-    align-items:center;
-}
-
-.modal img {
-    max-width:95%;
-    max-height:95%;
-    border-radius:10px;
-}
 </style>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
-<!-- LOGIN -->
-<div class="login" id="login">
-<h2>🔐 Login dulu</h2>
-<input type="email" id="email" placeholder="Email"><br>
-<input type="password" id="pass" placeholder="Password"><br>
-<button onclick="login()">Masuk</button>
-</div>
+<h2>🍳 Ide Masakan dari Kulkas</h2>
 
-<!-- GALERI -->
-<div class="gallery" id="gallery">
+<input type="text" id="bahan" placeholder="contoh: ayam, telur, tomat">
+<br>
+<button onclick="cari()">Cari Masakan</button>
 
-<h1>✨ Gambar Anime ✨</h1>
-
-<!-- FILTER -->
-<select class="filter" onchange="filter(this.value)">
-<option value="all">Semua</option>
-<option value="waifu">Waifu</option>
-<option value="action">Action</option>
-</select>
-
-<div class="grid" id="grid">
-
-<!-- 1 -->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTePLO29qUd-fKzgA_rtg7Nd400hp2fFN4KS9BxwVqfeA&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 2 -->
-<div class="card" data-kategori="action">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSutVb_z-bJf83Jr4i64rVwblrTr5LvDUSkH6SGepN5sg&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 3 -->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkSygbd3Nbd3tZCWVDel6HDUmLeWWSLDIvcK2mcAyHJA&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 4 -->
-<div class="card" data-kategori="action">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS96Q35I321wPChWRvLyBNwBkQOsrDGz4QQV-nEw4WQy7r2-Tdq9ptRgww&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 5 -->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgyE-Zpv7rwE6K1jKY7w6UJrKnuGXZX3kWyBnB737uLw&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 6 -->
-<div class="card" data-kategori="action">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi7uDuuEZuOLeksLPc5wuWSFzxxi0R39Ay_k5zjNNhlw&s" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 7 -->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAclSQFLVb2IHD6BWk4ig11Fg0GpV29yIeb4F9Ot1IKQ&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 8 -->
-<div class="card" data-kategori="action">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStfajRDFEcLtHr1jrH2RsCW0bj2oxmmUa4Qo4h8RIsbw&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 9 -->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGgGMLwu2NuXw-I9ElHSEAAHJPbfIJVxsKCeDGOYI4UA&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 10 -->
-<div class="card" data-kategori="action">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkhusa_FNnIiuj8Ys3ncDzUxn7QIvPV12NtN6hYKzsTw&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 11-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ5R0GtdwN8q0LfpB8UzNy8PisActDdFaRUuc9yBxR9i6lGMMPL9oiVYw&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-<!-- 12-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIQluabJENMhRRoqtIqUy53tV7bML2f-pz66fN9Z5VdQ&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-<!-- 13-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm7vTA1cOfWYVf5ggYH0ENZSWfIx4beUgw24SM36tgGA&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-<!-- 14-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm7vTA1cOfWYVf5ggYH0ENZSWfIx4beUgw24SM36tgGA&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 15-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQicpZ4RIDvqxCowLPhPZafuviOJRynFcVl-V_tVCkRjQ&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-
-<!-- 16-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWZM3JOFgFWAAPR8YTFl5He6tg4gd8rWoq3weHu0-ePQ&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 17-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSX6nxNjC2T8cx2UsCtIGqWUqwdN4BU7_8KFMwm1h6AhA&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 18-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg7n0bqGDK-8Vpx95qX3vnzDK6LjPPHue8qnDTgrVI0A&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 19-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmAuPYkkQE1nbFXPQvCeqaimIcKt14xSVUAfkJQYrYrA&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-<!-- 20-->
-<div class="card" data-kategori="waifu">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXyhXWJJhEQNWsrxT6CLVRFd3vyxsecp_HeWDtzeF97Q&s=10" onclick="zoom(this.src)">
-<div class="like" onclick="like(this)">❤️</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- MODAL ZOOM -->
-<div class="modal" id="modal" onclick="this.style.display='none'">
-<img id="zoomImg">
-</div>
+<div id="hasil"></div>
 
 <script>
 
-// LOGIN
-function login(){
-    let e = document.getElementById("email").value;
-    let p = document.getElementById("pass").value;
-
-    if(e && p){
-        document.getElementById("login").style.display="none";
-        document.getElementById("gallery").style.display="block";
-    } else {
-        alert("Isi dulu 😅");
+// DATA RESEP
+let resep = [
+    {
+        nama: "Tumis Ayam Sawi",
+        bahan: ["ayam","sawi"]
+    },
+    {
+        nama: "Telur Dadar Tomat",
+        bahan: ["telur","tomat"]
+    },
+    {
+        nama: "Tahu Kecap",
+        bahan: ["tahu","kecap"]
     }
-}
+];
 
-// LIKE
-function like(el){
-    el.textContent = el.textContent === "❤️" ? "💛" : "❤️";
-}
+function cari(){
+    let input = document.getElementById("bahan").value.toLowerCase();
+    let userBahan = input.split(",");
 
-// ZOOM
-function zoom(src){
-    document.getElementById("modal").style.display="flex";
-    document.getElementById("zoomImg").src = src;
-}
+    let hasil = "";
 
-// FILTER
-function filter(k){
-    let cards = document.querySelectorAll(".card");
-    cards.forEach(c=>{
-        if(k==="all" || c.dataset.kategori===k){
-            c.style.display="block";
-        } else {
-            c.style.display="none";
+    resep.forEach(r => {
+        let cocok = r.bahan.every(b => userBahan.includes(b));
+
+        if(cocok){
+            hasil += `<div class="card">${r.nama}</div>`;
         }
     });
+
+    document.getElementById("hasil").innerHTML = 
+        hasil || "<p>😅 Tidak ada resep cocok</p>";
 }
 
 </script>
