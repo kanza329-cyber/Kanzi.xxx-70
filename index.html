@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Meme Firebase</title>
+<title>Meme Sosial</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -25,8 +25,8 @@ body{
     z-index:10;
 }
 
-/* BUTTON UPLOAD */
-.upload-btn{
+/* BUTTON */
+.btn{
     background:green;
     border:none;
     padding:8px 12px;
@@ -36,10 +36,8 @@ body{
     cursor:pointer;
 }
 
-/* HIDDEN INPUT */
-#file{
-    display:none;
-}
+/* FILE */
+#file{ display:none; }
 
 /* FEED */
 .feed{
@@ -55,27 +53,36 @@ body{
     overflow:hidden;
 }
 
-.post img{
-    width:100%;
+.post img{ width:100%; }
+
+.user{
+    display:flex;
+    align-items:center;
+    padding:8px;
+}
+
+.user img{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    margin-right:8px;
 }
 
 .caption{
     padding:10px;
-    font-size:14px;
 }
 
-/* INPUT CAPTION */
+/* INPUT */
 #caption{
     position:fixed;
     bottom:10px;
     left:10px;
-    width:70%;
+    width:60%;
     padding:10px;
     border-radius:10px;
     border:none;
 }
 
-/* BUTTON KIRIM */
 .kirim{
     position:fixed;
     bottom:10px;
@@ -91,28 +98,32 @@ body{
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
     <div>🔥 Meme Feed</div>
-    <label class="upload-btn">
-        Upload
-        <input type="file" id="file">
-    </label>
+
+    <div>
+        <button class="btn" onclick="login()">Login</button>
+
+        <label class="btn">
+            Upload
+            <input type="file" id="file">
+        </label>
+    </div>
 </div>
 
-<!-- FEED -->
 <div class="feed" id="feed"></div>
 
-<!-- INPUT -->
-<input type="text" id="caption" placeholder="Tulis caption...">
+<input type="text" id="caption" placeholder="Caption...">
 <button class="kirim" onclick="upload()">Kirim</button>
 
 <script type="module">
 
+// 🔥 IMPORT FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, addDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 🔥 GANTI CONFIG KAMU
+// 🔥 CONFIG (GANTI PUNYA KAMU)
 const firebaseConfig = {
   apiKey: "AIzaSyDDtFscaogQXfjb4qO2iovus99i4Zqsl_4",
   authDomain: "kanza-702f2.firebaseapp.com",
@@ -121,16 +132,55 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+
+// LOGIN
+window.login = async function(){
+    let result = await signInWithPopup(auth, provider);
+    alert("Login sebagai: " + result.user.displayName);
+}
+
+// ANTI SPAM
+let loading = false;
+let lastUpload = 0;
 
 // UPLOAD
 window.upload = function(){
+
+    let user = auth.currentUser;
+
+    if(!user){
+        alert("Login dulu 🗿💢");
+        return;
+    }
+
+    let now = Date.now();
+
+    if(loading){
+        alert("Tunggu bentar taik  🗿");
+        return;
+    }
+
+    if(now - lastUpload < 3000){
+        alert("Jangan spam  ku lepar kau kalau spam😭");
+        return;
+    }
+
     let file = document.getElementById("file").files[0];
     let caption = document.getElementById("caption").value;
 
     if(!file){
-        alert("Pilih gambar dulu 🗿");
+        alert("Pilih gambar dulu  sana hush🗿");
         return;
     }
+
+    if(file.size > 1000000){
+        alert("Max 1MB 😵");
+        return;
+    }
+
+    loading = true;
 
     let reader = new FileReader();
 
@@ -139,10 +189,18 @@ window.upload = function(){
 
         await addDoc(collection(db, "posts"), {
             img: img,
-            caption: caption
+            caption: caption,
+            nama: user.displayName,
+            foto: user.photoURL,
+            waktu: new Date()
         });
 
+        lastUpload = Date.now();
+        loading = false;
+
         document.getElementById("caption").value = "";
+        document.getElementById("file").value = "";
+
         tampilkan();
     };
 
@@ -160,6 +218,11 @@ async function tampilkan(){
 
         html += `
         <div class="post">
+            <div class="user">
+                <img src="${p.foto}">
+                <b>${p.nama}</b>
+            </div>
+
             <img src="${p.img}">
             <div class="caption">${p.caption}</div>
         </div>
