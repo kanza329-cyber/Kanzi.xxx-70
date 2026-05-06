@@ -12,7 +12,6 @@ body{
     font-family:Arial;
 }
 
-/* HEADER */
 .header{
     position:fixed;
     top:0;
@@ -25,7 +24,6 @@ body{
     z-index:10;
 }
 
-/* BUTTON */
 .btn{
     background:green;
     border:none;
@@ -36,16 +34,13 @@ body{
     cursor:pointer;
 }
 
-/* FILE */
 #file{ display:none; }
 
-/* FEED */
 .feed{
     margin-top:60px;
     padding:10px;
 }
 
-/* POST */
 .post{
     background:#222;
     margin-bottom:15px;
@@ -72,7 +67,6 @@ body{
     padding:10px;
 }
 
-/* INPUT */
 #caption{
     position:fixed;
     bottom:10px;
@@ -99,10 +93,10 @@ body{
 <body>
 
 <div class="header">
-    <div>🔥 Meme Feed</div>
+    <div>🔥 Meme</div>
 
     <div>
-        <button class="btn" onclick="login()">Login</button>
+        <button id="loginBtn" class="btn" onclick="login()">Login</button>
 
         <label class="btn">
             Upload
@@ -121,9 +115,9 @@ body{
 // 🔥 IMPORT FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, addDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 🔥 CONFIG (GANTI PUNYA KAMU)
+// 🔥 CONFIG (ISI PUNYA KAMU)
 const firebaseConfig = {
   apiKey: "AIzaSyDDtFscaogQXfjb4qO2iovus99i4Zqsl_4",
   authDomain: "kanza-702f2.firebaseapp.com",
@@ -137,13 +131,21 @@ const provider = new GoogleAuthProvider();
 
 // LOGIN
 window.login = async function(){
-    let result = await signInWithPopup(auth, provider);
-    alert("Login sebagai: " + result.user.displayName);
+    await signInWithPopup(auth, provider);
 }
 
-// ANTI SPAM
-let loading = false;
-let lastUpload = 0;
+// AUTO UBAH TOMBOL LOGIN
+onAuthStateChanged(auth, (user) => {
+    let btn = document.getElementById("loginBtn");
+
+    if(user){
+        btn.innerText = user.displayName;
+        btn.disabled = true;
+    } else {
+        btn.innerText = "Login";
+        btn.disabled = false;
+    }
+});
 
 // UPLOAD
 window.upload = function(){
@@ -151,36 +153,18 @@ window.upload = function(){
     let user = auth.currentUser;
 
     if(!user){
-        alert("Login dulu 🗿💢");
+        alert("Login dulu 😅");
         return;
     }
 
-    let now = Date.now();
-
-    if(loading){
-        alert("Tunggu bentar taik  🗿");
-        return;
-    }
-
-    if(now - lastUpload < 3000){
-        alert("Jangan spam  ku lepar kau kalau spam😭");
-        return;
-    }
-
-    let file = document.getElementById("file").files[0];
+    let fileInput = document.getElementById("file");
+    let file = fileInput.files[0];
     let caption = document.getElementById("caption").value;
 
     if(!file){
-        alert("Pilih gambar dulu  sana hush🗿");
+        alert("Pilih gambar dulu 🗿");
         return;
     }
-
-    if(file.size > 1000000){
-        alert("Max 1MB 😵");
-        return;
-    }
-
-    loading = true;
 
     let reader = new FileReader();
 
@@ -195,11 +179,8 @@ window.upload = function(){
             waktu: new Date()
         });
 
-        lastUpload = Date.now();
-        loading = false;
-
+        fileInput.value = "";
         document.getElementById("caption").value = "";
-        document.getElementById("file").value = "";
 
         tampilkan();
     };
