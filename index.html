@@ -27,8 +27,8 @@ body{
 
 .light .post,
 .light #caption,
-.light .chat,
-.light .chat-input{
+.light .chat-input input,
+.light .chat-bubble{
     background:white;
     color:black;
 }
@@ -201,17 +201,8 @@ body{
 /* CHAT */
 .chat-box{
     padding:10px;
-}
-
-.chat{
-    background:#222;
-    padding:10px;
-    border-radius:12px;
-    margin-bottom:10px;
-}
-
-.chat b{
-    color:#00ff88;
+    height:calc(100vh - 220px);
+    overflow-y:auto;
 }
 
 .chat-input{
@@ -230,6 +221,50 @@ body{
     border-radius:12px;
     background:#222;
     color:white;
+}
+
+.chat-item{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+    align-items:flex-start;
+}
+
+.chat-avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.chat-bubble{
+    background:#222;
+    padding:10px;
+    border-radius:15px;
+    max-width:75%;
+}
+
+.chat-name{
+    color:#00ff88;
+    font-weight:bold;
+    margin-bottom:4px;
+}
+
+.room{
+    background:#222;
+    padding:12px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    margin:10px;
+}
+
+.room img{
+    width:50px;
+    height:50px;
+    border-radius:50%;
 }
 
 </style>
@@ -269,29 +304,90 @@ body{
 <!-- CHAT -->
 <div id="chatPage" class="page">
 
-    <div class="chat-box" id="chatRealtime"></div>
+    <!-- ROOM -->
+    <div id="roomList">
 
-    <div class="chat-input">
+        <div class="room" onclick="bukaGlobalChat()">
 
-        <input type="text"
-        id="chatInput"
-        placeholder="Tulis chat...">
+            <img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png">
 
-        <button class="btn"
-        onclick="kirimChat()">
+            <div>
 
-            Kirim
+                <b>Global Chat</b><br>
 
-        </button>
+                <span style="font-size:12px;color:gray;">
+                Chat semua pengguna 🔥
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- GLOBAL CHAT -->
+    <div id="globalChatBox" style="display:none;">
+
+        <div style="
+        padding:10px;
+        background:#000;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        position:sticky;
+        top:60px;
+        z-index:5;
+        ">
+
+            <button onclick="tutupGlobalChat()" class="btn">
+            ←
+            </button>
+
+            <img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png"
+            style="
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            ">
+
+            <div>
+
+                <b>Global Chat</b><br>
+
+                <span style="font-size:12px;color:gray;">
+                Online publik
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- CHAT -->
+        <div class="chat-box" id="chatRealtime"></div>
+
+        <!-- INPUT -->
+        <div class="chat-input">
+
+            <input type="text"
+            id="chatInput"
+            placeholder="Tulis chat...">
+
+            <button class="btn"
+            onclick="kirimChat()">
+
+                Kirim
+
+            </button>
+
+        </div>
 
     </div>
 
 </div>
 
-<!-- INPUT -->
+<!-- INPUT POST -->
 <div class="input-box">
 
-    <!-- PREVIEW -->
     <div id="previewBox"
     class="preview-box"
     style="display:none;">
@@ -302,7 +398,6 @@ body{
 
     </div>
 
-    <!-- INPUT -->
     <div class="input-wrap">
 
         <input type="text"
@@ -402,7 +497,7 @@ window.toggleMode = function(){
 
 }
 
-/* PINDAH PAGE */
+/* PAGE */
 window.showPage = function(page){
 
     document.querySelectorAll(".page")
@@ -410,6 +505,28 @@ window.showPage = function(page){
 
     document.getElementById(page)
     .classList.add("active");
+
+}
+
+/* OPEN CHAT */
+window.bukaGlobalChat = function(){
+
+    document.getElementById("globalChatBox")
+    .style.display = "block";
+
+    document.getElementById("roomList")
+    .style.display = "none";
+
+}
+
+/* CLOSE CHAT */
+window.tutupGlobalChat = function(){
+
+    document.getElementById("globalChatBox")
+    .style.display = "none";
+
+    document.getElementById("roomList")
+    .style.display = "block";
 
 }
 
@@ -531,25 +648,6 @@ onSnapshot(collection(db, "posts"), (data)=>{
 
                 </button>
 
-                ${
-                    auth.currentUser &&
-                    auth.currentUser.uid === p.uid
-
-                    ?
-
-                    `<button class="btn"
-                    onclick="hapusPost('${docu.id}')">
-
-                    🗑️
-
-                    </button>`
-
-                    :
-
-                    ""
-
-                }
-
             </div>
 
         </div>
@@ -575,19 +673,6 @@ window.likePost = async function(id){
 
 }
 
-/* HAPUS */
-window.hapusPost = async function(id){
-
-    let yakin = confirm("Hapus postingan?");
-
-    if(yakin){
-
-        await deleteDoc(doc(db, "posts", id));
-
-    }
-
-}
-
 /* CHAT */
 window.kirimChat = async function(){
 
@@ -603,12 +688,14 @@ window.kirimChat = async function(){
     let text =
     document.getElementById("chatInput").value;
 
-    if(text === "") return;
+    if(text.trim() === "") return;
 
     await addDoc(collection(db, "chat"), {
 
         nama: user.displayName,
-        text: text
+        foto: user.photoURL,
+        text: text,
+        waktu: new Date()
 
     });
 
@@ -627,11 +714,26 @@ onSnapshot(collection(db, "chat"), (data)=>{
 
         html += `
 
-        <div class="chat">
+        <div class="chat-item">
 
-            <b>${c.nama}</b><br>
+            <img src="${c.foto}"
+            class="chat-avatar">
 
-            ${c.text}
+            <div class="chat-bubble">
+
+                <div class="chat-name">
+
+                    ${c.nama}
+
+                </div>
+
+                <div>
+
+                    ${c.text}
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -641,6 +743,11 @@ onSnapshot(collection(db, "chat"), (data)=>{
 
     document.getElementById("chatRealtime")
     .innerHTML = html;
+
+    document.getElementById("chatRealtime")
+    .scrollTop =
+    document.getElementById("chatRealtime")
+    .scrollHeight;
 
 });
 
