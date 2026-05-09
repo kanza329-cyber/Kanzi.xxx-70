@@ -5,24 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 body{
     margin:0;
     background:#111;
     color:white;
     font-family:Arial;
+    transition:0.3s;
+}
+
+/* LIGHT MODE */
+.light{
+    background:#f1f1f1;
+    color:black;
+}
+
+.light .header,
+.light .menu{
+    background:white;
+}
+
+.light .post,
+.light #caption,
+.light .chat,
+.light .chat-input{
+    background:white;
+    color:black;
 }
 
 /* HEADER */
 .header{
     position:fixed;
     top:0;
-    width:100%;
+    left:0;
+    right:0;
     background:#000;
     padding:10px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    z-index:10;
+    z-index:100;
+    box-sizing:border-box;
+}
+
+.logo{
+    font-size:16px;
+    font-weight:bold;
+}
+
+/* MENU */
+.menu{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#000;
+    display:flex;
+    justify-content:space-around;
+    padding:12px 0;
+    z-index:100;
+    border-top:1px solid #222;
+}
+
+.menu button{
+    background:none;
+    border:none;
+    color:white;
+    font-size:24px;
+    cursor:pointer;
 }
 
 /* BUTTON */
@@ -36,11 +86,23 @@ body{
     cursor:pointer;
 }
 
-#file{ display:none; }
+#file{
+    display:none;
+}
+
+/* PAGE */
+.page{
+    display:none;
+    padding-top:60px;
+    padding-bottom:120px;
+}
+
+.active{
+    display:block;
+}
 
 /* FEED */
 .feed{
-    margin-top:60px;
     padding:10px;
 }
 
@@ -48,49 +110,53 @@ body{
 .post{
     background:#222;
     margin-bottom:15px;
-    border-radius:10px;
+    border-radius:15px;
     overflow:hidden;
 }
 
-.post img{ width:100%; }
+.post img{
+    width:100%;
+    display:block;
+}
 
 /* USER */
 .user{
     display:flex;
     align-items:center;
-    padding:8px;
+    padding:10px;
 }
 
 .user img{
-    width:30px;
-    height:30px;
+    width:35px;
+    height:35px;
     border-radius:50%;
-    margin-right:8px;
+    margin-right:10px;
 }
 
 /* CAPTION */
 .caption{
     padding:10px;
+    font-size:14px;
 }
 
 /* INPUT AREA */
 .input-box{
     position:fixed;
-    bottom:10px;
+    bottom:70px;
     left:10px;
     right:10px;
+    z-index:99;
 }
 
 /* PREVIEW */
 .preview-box{
-    position:absolute;
-    bottom:55px;
-    left:0;
     background:#222;
     padding:5px;
-    border-radius:10px;
+    border-radius:12px;
     display:flex;
     align-items:center;
+    width:fit-content;
+    margin-bottom:8px;
 }
 
 .preview-box img{
@@ -101,178 +167,482 @@ body{
 }
 
 .preview-box span{
-    margin-left:5px;
+    margin-left:8px;
     cursor:pointer;
+    font-size:18px;
 }
 
-/* INPUT */
+/* INPUT WRAP */
+.input-wrap{
+    display:flex;
+    gap:8px;
+}
+
 #caption{
-    width:70%;
-    padding:10px;
-    border-radius:10px;
+    flex:1;
+    padding:12px;
     border:none;
+    border-radius:12px;
+    outline:none;
+    background:#222;
+    color:white;
 }
 
 /* BUTTON KIRIM */
 .kirim{
     background:green;
     border:none;
+    padding:12px 16px;
+    border-radius:12px;
+    color:white;
+    cursor:pointer;
+}
+
+/* CHAT */
+.chat-box{
     padding:10px;
-    border-radius:10px;
+}
+
+.chat{
+    background:#222;
+    padding:10px;
+    border-radius:12px;
+    margin-bottom:10px;
+}
+
+.chat b{
+    color:#00ff88;
+}
+
+.chat-input{
+    position:fixed;
+    bottom:70px;
+    left:10px;
+    right:10px;
+    display:flex;
+    gap:8px;
+}
+
+.chat-input input{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background:#222;
     color:white;
 }
+
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
-    <div>🔥 Gambar Anime & Meme</div>
+
+    <div class="logo">🔥 Meme Sosial</div>
 
     <div>
-        <button id="loginBtn" class="btn" onclick="login()">Login</button>
+
+        <button class="btn" onclick="toggleMode()">🌙</button>
+
+        <button id="loginBtn" class="btn" onclick="login()">
+            Login
+        </button>
 
         <label class="btn">
             Upload
             <input type="file" id="file">
         </label>
+
     </div>
+
 </div>
 
-<div class="feed" id="feed"></div>
+<!-- HOME -->
+<div id="homePage" class="page active">
 
-<!-- INPUT BOX -->
-<div class="input-box">
+    <div class="feed" id="feed"></div>
 
-    <div id="previewBox" class="preview-box" style="display:none;">
-        <img id="previewImg">
-        <span onclick="hapusPreview()">❌</span>
+</div>
+
+<!-- CHAT -->
+<div id="chatPage" class="page">
+
+    <div class="chat-box" id="chatRealtime"></div>
+
+    <div class="chat-input">
+
+        <input type="text"
+        id="chatInput"
+        placeholder="Tulis chat...">
+
+        <button class="btn"
+        onclick="kirimChat()">
+
+            Kirim
+
+        </button>
+
     </div>
 
-    <input type="text" id="caption" placeholder="Caption...">
-    <button class="kirim" onclick="upload()">Kirim</button>
+</div>
+
+<!-- INPUT -->
+<div class="input-box">
+
+    <!-- PREVIEW -->
+    <div id="previewBox"
+    class="preview-box"
+    style="display:none;">
+
+        <img id="previewImg">
+
+        <span onclick="hapusPreview()">❌</span>
+
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-wrap">
+
+        <input type="text"
+        id="caption"
+        placeholder="Tulis sesuatu...">
+
+        <button class="kirim"
+        onclick="upload()">
+
+            Kirim
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- MENU -->
+<div class="menu">
+
+    <button onclick="showPage('homePage')">🏠</button>
+
+    <button onclick="showPage('chatPage')">💬</button>
 
 </div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, addDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
+import {
+    getFirestore,
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    updateDoc,
+    onSnapshot,
+    increment
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+import {
+    getAuth,
+    signInWithPopup,
+    GoogleAuthProvider,
+    onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+/* CONFIG */
 const firebaseConfig = {
+
   apiKey: "AIzaSyDDtFscaogQXfjb4qO2iovus99i4Zqsl_4",
   authDomain: "kanza-702f2.firebaseapp.com",
   projectId: "kanza-702f2"
+
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
+
 const auth = getAuth();
+
 const provider = new GoogleAuthProvider();
 
-// LOGIN
+/* LOGIN */
 window.login = async function(){
+
     await signInWithPopup(auth, provider);
+
 }
 
-// UBAH TOMBOL LOGIN
-onAuthStateChanged(auth, (user) => {
+/* LOGIN BUTTON */
+onAuthStateChanged(auth, (user)=>{
+
     let btn = document.getElementById("loginBtn");
 
     if(user){
+
         btn.innerText = user.displayName;
-        btn.disabled = true;
-    } else {
+
+    }else{
+
         btn.innerText = "Login";
-        btn.disabled = false;
+
     }
+
 });
 
-// PREVIEW GAMBAR
+/* DARK MODE */
+window.toggleMode = function(){
+
+    document.body.classList.toggle("light");
+
+}
+
+/* PINDAH PAGE */
+window.showPage = function(page){
+
+    document.querySelectorAll(".page")
+    .forEach(el => el.classList.remove("active"));
+
+    document.getElementById(page)
+    .classList.add("active");
+
+}
+
+/* PREVIEW */
 document.getElementById("file").onchange = function(e){
+
     let file = e.target.files[0];
 
     if(file){
-        document.getElementById("previewImg").src = URL.createObjectURL(file);
+
+        document.getElementById("previewImg").src =
+        URL.createObjectURL(file);
+
         document.getElementById("previewBox").style.display = "flex";
+
     }
+
 }
 
-// HAPUS PREVIEW
+/* HAPUS PREVIEW */
 window.hapusPreview = function(){
+
     document.getElementById("file").value = "";
+
     document.getElementById("previewBox").style.display = "none";
+
 }
 
-// UPLOAD
+/* UPLOAD */
 window.upload = function(){
 
     let user = auth.currentUser;
 
     if(!user){
+
         alert("Login dulu 😅");
         return;
+
     }
 
     let fileInput = document.getElementById("file");
+
     let file = fileInput.files[0];
+
     let caption = document.getElementById("caption").value;
 
     if(!file){
+
         alert("Pilih gambar dulu 🗿");
         return;
+
     }
 
     let reader = new FileReader();
 
     reader.onload = async function(e){
+
         let img = e.target.result;
 
         await addDoc(collection(db, "posts"), {
+
             img: img,
             caption: caption,
             nama: user.displayName,
             foto: user.photoURL,
+            uid: user.uid,
+            like: 0,
             waktu: new Date()
+
         });
 
         fileInput.value = "";
+
         document.getElementById("caption").value = "";
+
         document.getElementById("previewBox").style.display = "none";
 
-        tampilkan();
     };
 
     reader.readAsDataURL(file);
+
 }
 
-// TAMPILKAN
-async function tampilkan(){
-    let data = await getDocs(collection(db, "posts"));
+/* REALTIME POST */
+onSnapshot(collection(db, "posts"), (data)=>{
+
+    let html = "";
+
+    data.forEach(docu=>{
+
+        let p = docu.data();
+
+        html += `
+
+        <div class="post">
+
+            <div class="user">
+
+                <img src="${p.foto}">
+
+                <b>${p.nama}</b>
+
+            </div>
+
+            <img src="${p.img}">
+
+            <div class="caption">
+
+                ${p.caption}
+
+            </div>
+
+            <div style="padding:10px;display:flex;gap:10px;">
+
+                <button class="btn"
+                onclick="likePost('${docu.id}')">
+
+                    ❤️ ${p.like || 0}
+
+                </button>
+
+                ${
+                    auth.currentUser &&
+                    auth.currentUser.uid === p.uid
+
+                    ?
+
+                    `<button class="btn"
+                    onclick="hapusPost('${docu.id}')">
+
+                    🗑️
+
+                    </button>`
+
+                    :
+
+                    ""
+
+                }
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("feed").innerHTML = html;
+
+});
+
+/* LIKE */
+window.likePost = async function(id){
+
+    let ref = doc(db, "posts", id);
+
+    await updateDoc(ref, {
+
+        like: increment(1)
+
+    });
+
+}
+
+/* HAPUS */
+window.hapusPost = async function(id){
+
+    let yakin = confirm("Hapus postingan?");
+
+    if(yakin){
+
+        await deleteDoc(doc(db, "posts", id));
+
+    }
+
+}
+
+/* CHAT */
+window.kirimChat = async function(){
+
+    let user = auth.currentUser;
+
+    if(!user){
+
+        alert("Login dulu 😅");
+        return;
+
+    }
+
+    let text =
+    document.getElementById("chatInput").value;
+
+    if(text === "") return;
+
+    await addDoc(collection(db, "chat"), {
+
+        nama: user.displayName,
+        text: text
+
+    });
+
+    document.getElementById("chatInput").value = "";
+
+}
+
+/* REALTIME CHAT */
+onSnapshot(collection(db, "chat"), (data)=>{
 
     let html = "";
 
     data.forEach(doc=>{
-        let p = doc.data();
+
+        let c = doc.data();
 
         html += `
-        <div class="post">
-            <div class="user">
-                <img src="${p.foto}">
-                <b>${p.nama}</b>
-            </div>
 
-            <img src="${p.img}">
-            <div class="caption">${p.caption}</div>
+        <div class="chat">
+
+            <b>${c.nama}</b><br>
+
+            ${c.text}
+
         </div>
+
         `;
+
     });
 
-    document.getElementById("feed").innerHTML = html;
-}
+    document.getElementById("chatRealtime")
+    .innerHTML = html;
 
-tampilkan();
+});
 
 </script>
 
