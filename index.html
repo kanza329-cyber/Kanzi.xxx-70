@@ -285,7 +285,7 @@ body{
 <!-- HEADER -->
 <div class="header">
 
-    <div class="logo">🔥 Meme Sosial</div>
+    <div class="logo">🔥 Meme+anime Sosial</div>
 
     <div>
 
@@ -312,13 +312,138 @@ body{
 </div>
 
 <!-- CHAT PAGE -->
-<div id="chatPage" class="page">
+<div id="chatPage"
+class="page">
+
+<div id="roomList"
+class="room-wrap">
+
+<div class="room-card"
+onclick="bukaGlobalChat()">
+
+<img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png">
+
+<div>
+<b>Global Chat</b><br>
+
+<span style="
+font-size:12px;
+color:gray;">
+
+Chat semua pengguna 🔥
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="globalChatArea"
+class="chat-area">
+
+<div class="chat-header">
+
+<button class="btn"
+onclick="tutupGlobalChat()">
+
+←
+
+</button>
+
+<img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png">
+
+<div>
+
+<b>Global Chat</b><br>
+
+<span style="
+font-size:12px;
+color:gray;">
+
+Online publik
+
+</span>
+
+</div>
+
+</div>
+
+<div class="chat-box"
+id="chatRealtime">
+
+</div>
+
+<div class="chat-input">
+
+<input
+type="text"
+id="chatInput"
+placeholder="Tulis chat...">
+
+<button class="btn"
+onclick="kirimChat()">
+
+Kirim
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+<!-- PROFILE -->
+<div id="profilePage" class="page">
+
+    <div style="padding:20px;text-align:center;">
+
+        <img id="profileFoto"
+        style="
+        width:90px;
+        height:90px;
+        border-radius:50%;
+        ">
+
+        <h2 id="profileNama">
+            User
+        </h2>
+
+        <input
+        type="text"
+        id="editNama"
+        placeholder="Nama baru..."
+        style="
+        padding:10px;
+        border:none;
+        border-radius:10px;
+        width:80%;
+        ">
+
+        <br><br>
+
+        <button class="btn"
+        onclick="gantiNama()">
+
+            Simpan Nama
+
+        </button>
+
+    </div>
+
+    <div
+    id="profilePosts"
+    class="feed">
+
+    </div>
+
+</div>
 
     <!-- ROOM -->
-    <div id="roomList" class="room-wrap">
+ 
 
-        <div class="room-card" onclick="bukaGlobalChat()">
-
+        
             <img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png">
 
             <div>
@@ -333,9 +458,9 @@ body{
     </div>
 
     <!-- CHAT -->
-    <div id="globalChatArea" class="chat-area">
+    
 
-        <div class="chat-header">
+   
 
             <button class="btn" onclick="tutupGlobalChat()">
                 ←
@@ -352,9 +477,8 @@ body{
 
         </div>
 
-        <div class="chat-box" id="chatRealtime"></div>
 
-        <div class="chat-input">
+
 
             <input
             type="text"
@@ -370,7 +494,7 @@ body{
     </div>
 
 </div>
-
+</div>
 <!-- INPUT POSTING -->
 <div class="input-box" id="postInputBox">
 
@@ -412,6 +536,9 @@ body{
     <button onclick="showPage('chatPage')">
         💬
     </button>
+<button onclick="showPage('profilePage')">
+👤
+</button>
 
 </div>
 
@@ -433,12 +560,13 @@ import {
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 import {
-    getAuth,
-    signInWithPopup,
-    GoogleAuthProvider,
-    onAuthStateChanged
+getAuth,
+signInWithPopup,
+GoogleAuthProvider,
+onAuthStateChanged,
+updateProfile
 }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+ from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 /* CONFIG */
 const firebaseConfig = {
@@ -594,32 +722,47 @@ window.upload = function(){
 
     let reader = new FileReader();
 
-    reader.onload = async function(e){
+reader.onload = async function(e){
 
-        await addDoc(
-        collection(db, "posts"), {
+let btn =
+document.querySelector(".kirim");
 
-            img: e.target.result,
-            caption: caption,
-            nama: user.displayName,
-            foto: user.photoURL,
-            uid: user.uid,
-            like: 0,
-            waktu: new Date()
+btn.innerText =
+"Uploading...";
 
-        });
+setTimeout(async()=>{
 
-        fileInput.value = "";
+await addDoc(
+collection(db,"posts"),{
 
-        document.getElementById("caption")
-        .value = "";
+img:e.target.result,
+caption:caption,
+nama:user.displayName,
+foto:user.photoURL,
+uid:user.uid,
+like:0,
+waktu:new Date()
 
-        document.getElementById("previewBox")
-        .style.display = "none";
+});
 
-    };
+btn.innerText="Kirim";
 
-    reader.readAsDataURL(file);
+fileInput.value="";
+
+document.getElementById(
+"caption"
+).value="";
+
+document.getElementById(
+"previewBox"
+).style.display="none";
+
+},1500);
+
+};
+
+reader.readAsDataURL(file);
+
 
 }
 
@@ -751,7 +894,6 @@ window.kirimChat = async function(){
     .value = "";
 
 }
-
 /* REALTIME CHAT */
 onSnapshot(collection(db, "chat"), (data)=>{
 
@@ -775,10 +917,70 @@ onSnapshot(collection(db, "chat"), (data)=>{
 
     });
 
-    document.getElementById("chatRealtime")
-    .innerHTML = html;
+    document.getElementById(
+    "chatRealtime"
+    ).innerHTML = html;
 
 });
+
+
+/* PROFILE USER */
+onAuthStateChanged(auth,(user)=>{
+
+    if(!user) return;
+
+    document.getElementById(
+    "profileNama"
+    ).innerText =
+    user.displayName;
+
+    document.getElementById(
+    "profileFoto"
+    ).src =
+    user.photoURL;
+
+});
+
+
+/* GANTI NAMA */
+window.gantiNama = async function(){
+
+    let user =
+    auth.currentUser;
+
+    if(!user){
+
+        alert("Login dulu");
+        return;
+
+    }
+
+    let namaBaru =
+    document.getElementById(
+    "editNama"
+    ).value;
+
+    if(namaBaru==="") return;
+
+    await updateProfile(user,{
+
+        displayName:namaBaru
+
+    });
+
+    document.getElementById(
+    "profileNama"
+    ).innerText =
+    namaBaru;
+
+    alert(
+    "Nama berhasil diganti 🔥"
+    );
+
+}
+
+
+ 
 
 </script>
 
